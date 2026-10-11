@@ -10,7 +10,7 @@ export const helpTopics = [
  {id:'permissions',title:'내 기록과 이용 범위',description:'내 작업·프로필·알림·기록을 관리할 수 있어요. 공식 화면과 기능 배포는 개발자가 관리해요. 현재는 한 사람의 컴퓨터에 저장하는 방식이며 사용자별 로그인·권한 분리는 아직 제공하지 않아요. AI가 기록을 참고하도록 요청할 수 있지만 항상 기억하거나 다른 기기에 자동 동기화하지는 않아요.'},
 ] as const;
 export function getHelp(topic:string='all') {
- return {version:'0.1.8',topics:helpTopics.filter(t=>topic==='all'||t.id===topic),
+ return {version:'0.1.9',topics:helpTopics.filter(t=>topic==='all'||t.id===topic),
   support:{implemented:['local_records','binary_count_goals','calendar_history','photo_storage','autosave_profile','open_app_alarms','help_overlay'],
    requiresHost:['chat_tool_selection','attachment_bytes','image_recognition'],
    planned:['role_authorization','cross_device_sync','background_mobile_notifications','camera_auto_import']},

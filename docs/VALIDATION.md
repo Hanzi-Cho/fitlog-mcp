@@ -1,6 +1,6 @@
 # Validation / 2026-10-10
 
-Stage: MVP implementation. Code and personal plugin installation are ready. Final host acceptance and real cloud reminder delivery are pending. No commit/push yet.
+Stage: MVP implementation. This file is chronological evidence; historical pending/scope statements are superseded by the latest version entries below. GitHub pushes are authorized and completed. Mobile/background notification delivery is later scope, not a current MVP gate.
 
 ## Environment
 
@@ -132,3 +132,11 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - 사용자 첨부 JPG를 변경 없이 자산으로 복사, 원본·저장소·패키지·설치 캐시 SHA256 일치 확인. portable/compatibility manifest의 composerIcon/logo/logoDark 경로와 소스/캐시 manifest 해시 일치. prepare-plugin 문법 검사 통과.
 - Fitlog0.1.8 installed=true/enabled=true 재조회. 실제 Codex 새 카드의 도움말/아이콘 표시·AI 채팅 라우팅·첨부 bytes 접근·실제 이미지 인식·모바일 호스트 수용 미검증. 열린 카드/서버가 자동 교체됐다고 주장하지 않는다. 로그인/RBAC·기기 간 자동 동기화·모바일 백그라운드 전달은 미구현.
 - TESTING.md E2E-01..12에 기대값/코드/근거 계층/미검증·후속을 명시. 추가 도구 Inspector/promptfoo/ARTEMIS는 공식 자료 조사·추천이며 설치/실행하지 않음. Linear 공통/프로젝트 문서와 HAN-8에 제품화4축/결과를 기록 후 재조회. MVP/HAN-8 In Progress 유지.
+
+
+## 0.1.9 · UX-017/018 · 2026-10-11
+- 통과: 타입/빌드, 26개 도메인·실제 임시 SQLite 시험, 실제 stdio MCP26도구/0.1.9 리소스/동일 tour 순서·체크리스트3페이지·도움말 무변경, 백업/복구/probe. 데이터 스키마/개인 DB/사진 변경 없음.
+- 실제 React + 합성 SQLite + 모사 host bridge: 사용자 지정8기능/총11설명 순서 전체 통과. 각 설명마다 실제 대상/말풍선 bounding box 비겹침·viewport 내 배치, 같은 영역 페이지 위치/높이 동일, 최초 힌트와 재방문 미표시, X/ESC/Tab·포커스 복원, 설정 자동 열기/시작 상태 복원, 모션 감소와 도움말 전후 revision 동일. 1000x900/720x540/600x480/360x800 및 알림20개 600x480/360x800 통과. 알림 상시 표시와 기존 목표/프로필/알림 편집·사진/달력·작은 노트북 페이지 fit 회귀·JS 오류 없음.
+- help-checklist.png/help-profile-narrow.png/help-alarms-compact.png 합성 화면 육안 확인. dim 배경을 유지하면서 말풍선 fade 전환, 기본240ms enter/180ms leave, 모션 감소 즉시 처리. 강조는 실제 요소 주변이며 대상은 가리지 않음. 좁고 내용이 긴 영역에서는 설명 내부만 스크롤.
+- 단계 자동 전이 사용자 승인 확보: 기준 충족 시 재확인 없이 전이·재조회. 현재 프로젝트 MVP/HAN-8 In Progress 유지 사유는 최신 실제 호스트 핵심 흐름 미검증. 사용자 UI 피드백/과거 probe 저장은 근거로 인정하되 최신 첨부·인식·저장·신규 채팅을 대신하지 않는다. 현재 대화 callable Fitlog 메타데이터는 초기11도구이며 이번 격리 MCP시험26도구와 다름.
+- 제품화 전이 전 확인: 최신 실제 호스트 신규 채팅에서 목표/기록 저장→UI 최신화→새 조회 일치, 실제 첨부 bytes→AI분석→저장→사진/분석 재조회 일치. UI사용감·API·모사·실제호스트를 분리. 미지원 모바일/백그라운드 전달·카메라 자동수집·RBAC·기기 동기화는 후속 범위이며 현 MVP에 소급 필수화하지 않음.

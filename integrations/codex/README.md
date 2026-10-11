@@ -98,3 +98,6 @@ package/MCP/bridge/UI 리소스 ui://fitlog/dashboard/v0.1.6.html 버전을 통�
 공통 도움말과 get_help 추가: MCP26도구, ui://fitlog/dashboard/v0.1.8.html. build → prepare-plugin → plugin add 후 manifest/cache를 재조회한다. 이미 열린 카드/서버의 자동 교체를 주장하지 않으며 새 카드 실제 수용은 별도다.
 
 사용자 제공 Fitlog JPG를 assets/fitlog-icon.jpg로 보존하고 패키지 assets에 복사한다. portable/compatibility manifest의 composerIcon·logo·logoDark에 연결한다. JPG 원본이며 벡터 변환/그림 변경 없음. 설치 캐시의 자산 해시를 원본과 비교하고 실제 호스트 노출은 별도 확인한다. 공식 필드: https://developers.openai.com/plugins/build/plugins .
+
+## 0.1.9
+앵커 순차 도움말·첫 방문 안내·알림 상시 펼침. MCP26도구, ui://fitlog/dashboard/v0.1.9.html. build → prepare-plugin → plugin add → 캐시 재조회. 기존 열린 카드 교체와 실제 Codex 새 카드 수용은 구분한다.

@@ -59,3 +59,8 @@ Approved design: docs/DESIGN.md (2026-10-10 user approval).
 전이 운영: 구체화에서 위 4축의 범위·담당·수용 기준을 정하고, MVP에서 핵심 코드/테스트/지원 한계를 만든다. 제품화에서는 실패 시나리오·실제 통합·회귀 코드와 근거를 보강한다. 출시/Analytics 전에는 핵심 시나리오 실제 대상 환경 통과와 권한/데이터 유실/핵심 흐름 차단 해소를 확인한다. 각 축에 적용 여부·담당·환경/버전·통과/실패/미검증·근거·이월 결정을 기록한다. 문서 작성·에뮬레이터 통과만으로 Linear 상태를 이동하지 않는다.
 
 Read docs/TESTING.md for numbered scenarios and evidence levels. UI/MCP help must share src/domain/help.ts. Update tests and requirements with meaningful behavior changes; do not invent host/AI/mobile acceptance from mocks. UX-015 supersedes the old title+config-only header: put help immediately left of config.
+
+0.1.9 / UX-017·018 supersedes UX-015 simultaneous help cards. Guide one anchored bubble at a time in the user-defined feature order; never cover the active feature, keep multi-page callout geometry fixed, use enter/exit animation and reduced-motion handling. Shared helpTour.ts feeds UI and get_help. First-use hint is a local UI preference, not account tracking. Alarm settings are always expanded; restore pre-tour settings/scroll/focus without data writes. See requirements/UX.md and TESTING.md.
+
+## 단계 자동 전이 · 2026-10-11 최신 사용자 승인
+사용자가 ‘Linear MVP, 제품화 단계로 넘어갔다면 말 안 해도 옮기고, 부족하다면 근거를 제시’하도록 명시했다. 합의된 범위의 MVP/제품화 단계는 기존/현재 승인과 실제 진입·완료 기준이 충족되면 별도 재확인 없이 에이전트가 최신 상태/동시 변경을 읽고 전이·재조회·근거 기록까지 수행한다. 충족되지 않으면 현재 단계, 완료 근거, 핵심 부족 근거, 다음 검증, 후속 범위와 차단 범위를 구분해 보고한다. 문서 작성만으로 보류하거나 이미 받은 전이 승인을 다시 묻지 않는다. 실제 핵심 미검증은 완료로 꾸미지 않는다. 새로운 배포/비용/공유/파괴적 변경 등 합의 범위 밖 영향은 별도 승인 범위를 확인한다.

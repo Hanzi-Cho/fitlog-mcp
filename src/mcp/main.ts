@@ -1,4 +1,4 @@
-import {checkReminderInput,checkInput,nutritionInput,photoInput,analysisSchema} from '../contracts/experience.js';
+import {goalInput,slotSchema,checkReminderInput,checkInput,nutritionInput,photoInput,analysisSchema} from '../contracts/experience.js';
 import {dateSchema} from '../contracts/schemas.js';
 import { McpServer } from '@modelcontextprotocol/server';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
@@ -12,8 +12,8 @@ import { publicError } from '../contracts/errors.js';
 
 const db = openDatabase(dataDirectory());
 const service = new FitlogService(db);
-const server = new McpServer({ name:'fitlog-mcp', version:'0.1.3' });
-const uri = 'ui://fitlog/dashboard/v0.1.3.html';
+const server = new McpServer({ name:'fitlog-mcp', version:'0.1.4' });
+const uri = 'ui://fitlog/dashboard/v0.1.4.html';
 function result(fn: () => unknown) { try { const data = fn(); return { content:[{type:'text' as const,text:JSON.stringify(data)}], structuredContent:{ ok:true, data } }; } catch(error) { const data=publicError(error); return { isError:true, content:[{type:'text' as const,text:data.message}], structuredContent:{ok:false,error:data} }; } }
 const read = { readOnlyHint:true, openWorldHint:false };
 const write = { readOnlyHint:false, destructiveHint:false, idempotentHint:true, openWorldHint:false };
@@ -40,5 +40,7 @@ server.registerTool('delete_meal_photo',{description:'Delete the explicitly sele
 
 server.registerTool('get_check_reminders',{description:'Get in-app meal check times. Not a background/cloud scheduler or proof of OS delivery.',inputSchema:z.object({}),annotations:read},()=>result(()=>service.journal.reminders()));
 server.registerTool('update_check_reminders',{description:'Save in-app meal check times. Runs while the UI is open only; does not create cloud schedules.',inputSchema:z.object({reminders:checkReminderInput,expectedVersion:z.number().int().positive()}).strict(),annotations:write},a=>result(()=>service.journal.setReminders(a.reminders,a.expectedVersion)));
+server.registerTool('add_goal',{description:'Add a daily binary/count task from today onward. Read open_dashboard goalConfigVersion first. Historical goal lists/checks remain unchanged. Numeric targets must be explicit. This creates a new task, so do not retry blindly after an uncertain response.',inputSchema:z.object({goal:goalInput,expectedVersion:z.number().int().positive()}).strict(),annotations:{...write,idempotentHint:false}},a=>result(()=>service.journal.addGoal(a.goal,a.expectedVersion)));
+server.registerTool('remove_goal',{description:'Remove the explicitly selected task from today onward. Historical checks and goal lists are retained. Read current task id and goalConfigVersion from open_dashboard.',inputSchema:z.object({id:slotSchema,expectedVersion:z.number().int().positive()}).strict(),annotations:{...write,idempotentHint:false}},a=>result(()=>service.journal.removeGoal(a.id,a.expectedVersion)));
 await server.connect(new StdioServerTransport());
 process.on('SIGINT',()=>{db.close();process.exit(0);});

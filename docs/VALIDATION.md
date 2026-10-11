@@ -93,3 +93,13 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - 실제 Codex 내 최신 카드·자연어/채팅 첨부 bytes 전달·AI 품질은 미검증. 설치 갱신과 활성 앱 세션 재시작은 별개다. 개인 건강 DB/사진을 시험 fixture로 사용하지 않았다. 이전 카메라/폴더/앱 업로드 수용 항목은 최신 UX 개정으로 제외한다.
 
 설치 확인(2026-10-11): prepare-plugin 및 codex plugin add 이후 Fitlog installed=true, enabled=true, version=0.1.3. 소스/캐시 manifest 해시 일치 확인. 활성 Codex 세션의 재시작/새 카드 수용은 별도 미검증이며 강제 종료하지 않았다.
+
+
+## 0.1.4 날짜 탐색/작업 관리 · 2026-10-11
+- 최신 요구 UX-007/008: 중앙 빈 안내, 오늘 기본, 과거 달성 목록→사진 슬라이드, 과거 재클릭 오늘 복귀, 상단 오늘 지표 독립. 목록 마지막 추가/행별 제거와 binary/count 목표. 현재/과거 목표 집합과 분모를 날짜별 보존하고 체크는 삭제하지 않음.
+- 코드: compact.tsx/Imagebook.tsx/Checks.tsx/TaskEditor.tsx, experience.ts/journal.ts/service.ts/goals.ts. goalConfig 날짜별 revisions와 버전, 백업 기본값·복원 포함. 실제 개인 DB/사진은 읽거나 수정하지 않음.
+- 통과: pnpm typecheck/build/test(22개), 실제 stdio MCP 22도구/0.1.4 UI·추가/제거/충돌/재시작, 백업 CLI/probe. 실제 React+합성 SQLite/모사 bridge 브라우저: 중앙 위치 실측, 날짜 목록→사진/왕복·재클릭/오늘 지표 유지, count 추가/저장/제거/재조회, 과거 목표/분모 보존, PC/360px dark 넘침·JS 오류 없음. 합성 PC/과거 날짜 화면 육안 확인.
+- 프로젝트 MVP/HAN-8 In Progress 유지. 실제 Codex 새 카드 수용·채팅 첨부/AI·실제 알림 수신은 별도 미검증. 설치 갱신과 열린 앱 세션 수용을 구분한다.
+
+설치 확인: prepare-plugin 및 plugin add 이후 installed=true/enabled=true/version=0.1.4, 소스/캐시 manifest 해시 일치. 활성 Codex 앱의 강제 종료는 수행하지 않았으며 새 카드 수용은 미검증.
+

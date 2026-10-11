@@ -78,3 +78,6 @@ codex plugin remove fitlog@fitlog-personal
 생성/설치 절차는 위와 같으며 현재 버전은 0.1.3, UI URI는 ui://fitlog/dashboard/v0.1.3.html이다. 설치 목록·캐시 manifest를 재조회한 뒤 Codex를 완전히 종료/다시 실행하고 새 Fitlog 카드를 연다. 이미 열려 있던 카드의 내용은 자동 교체를 보장하지 않는다. 과거 ‘미니 대시보드/PiP’ 절은 당시 이력이며 최신 requirements/UX.md가 우선한다.
 
 설치 확인(2026-10-11): prepare-plugin 및 codex plugin add 이후 Fitlog installed=true, enabled=true, version=0.1.3. 소스/캐시 manifest 해시 일치 확인. 활성 Codex 세션의 재시작/새 카드 수용은 별도 미검증이며 강제 종료하지 않았다.
+
+## 0.1.4 · 날짜 기록/작업 관리
+최신 리소스 ui://fitlog/dashboard/v0.1.4.html, MCP 도구 22개(add_goal/remove_goal 포함). prepare-plugin→plugin add→설치/캐시 재조회 순서를 적용한다. Codex 완전 재시작 후 새 카드를 열어 실제 수용을 확인한다. 기존 열린 카드를 최신으로 간주하지 않는다.

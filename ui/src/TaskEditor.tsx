@@ -1,0 +1,6 @@
+import {useState} from 'react';
+export function TaskEditor({busy,onAdd}:{busy:boolean;onAdd:(goal:{label:string;controlType:'binary'|'count';target:number})=>Promise<boolean>}){
+ const [open,setOpen]=useState(false),[label,setLabel]=useState(''),[type,setType]=useState<'binary'|'count'>('binary'),[target,setTarget]=useState('100');
+ if(!open)return <button className="add-task" disabled={busy} onClick={()=>setOpen(true)}>＋ 작업 추가하기</button>;
+ return <form className="task-editor" onSubmit={e=>{e.preventDefault();void onAdd({label:label.trim(),controlType:type,target:type==='count'?Number(target):1}).then(ok=>{if(ok){setLabel('');setOpen(false);}});}}><input aria-label="새 작업 이름" autoFocus required maxLength={80} value={label} onChange={e=>setLabel(e.target.value)} placeholder="작업 이름"/><div className="task-editor-options"><select aria-label="새 작업 유형" value={type} onChange={e=>setType(e.target.value as 'binary'|'count')}><option value="binary">체크</option><option value="count">횟수</option></select>{type==='count'&&<input aria-label="목표 횟수" type="number" min="1" max="1000000" step="1" required value={target} onChange={e=>setTarget(e.target.value)}/>}<button disabled={busy||!label.trim()}>추가</button><button type="button" disabled={busy} onClick={()=>setOpen(false)}>취소</button></div></form>;
+}

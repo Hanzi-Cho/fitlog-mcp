@@ -1,8 +1,14 @@
 import { z } from 'zod';
 import { validDate } from '../domain/dates.js';
 const dateSchema=z.string().refine(validDate,'날짜를 확인하세요.');
-export const slotSchema=z.enum(['workout','breakfast','lunch','dinner']);
+export const slotSchema=z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/);
 export const controlTypeSchema=z.enum(['binary','count']);
+export const goalInput=z.object({label:z.string().trim().min(1).max(80),controlType:controlTypeSchema.default('binary'),target:z.number().int().min(1).max(1000000).default(1)}).strict();
+export const goalSchema=goalInput.extend({id:slotSchema});
+export const defaultGoals=[{id:'workout',label:'운동',controlType:'binary' as const,target:1},{id:'breakfast',label:'아침 식사',controlType:'binary' as const,target:1},{id:'lunch',label:'점심 식사',controlType:'binary' as const,target:1},{id:'dinner',label:'저녁 식사',controlType:'binary' as const,target:1}];
+export const goalConfigSchema=z.object({version:z.number().int().positive(),revisions:z.array(z.object({fromDate:dateSchema,goals:z.array(goalSchema).max(50)}).strict()).min(1).max(10000)}).strict().refine(c=>c.revisions[0]?.fromDate==='1900-01-01'&&c.revisions.every((r,i)=>(i===0||r.fromDate>c.revisions[i-1]!.fromDate)&&new Set(r.goals.map(g=>g.id)).size===r.goals.length),'작업 이력의 날짜/중복을 확인하세요.');
+export const initialGoalConfig=()=>({version:1,revisions:[{fromDate:'1900-01-01',goals:defaultGoals.map(g=>({...g}))}]});
+export type Goal=z.infer<typeof goalSchema>;
 export const checkInput=z.object({localDate:dateSchema,slot:slotSchema,controlType:controlTypeSchema.default('binary'),label:z.string().trim().max(80).default(''),count:z.number().int().min(0).max(1000000).default(0),target:z.number().int().min(1).max(1000000).default(1),status:z.enum(['unwritten','yes','no']),occurrence:z.enum(['unknown','completed','skipped','planned']),note:z.string().trim().max(500).default('')}).strict().refine(x=>x.occurrence!=='planned'||x.status==='unwritten','예정은 목표 달성으로 판정하지 않습니다.');
 export const checkSchema=checkInput.safeExtend({version:z.number().int().positive()});
 const optionalNumber=(min:number,max:number)=>z.number().finite().min(min).max(max).nullable().default(null);
@@ -15,7 +21,7 @@ export const photoInput=z.object({localDate:dateSchema,mealType:z.enum(['breakfa
 export const photoSchema=photoInput.extend({id:z.uuid(),hash:z.string().regex(/^[a-f0-9]{64}$/),version:z.number().int().positive(),createdAt:z.iso.datetime(),analysis:analysisSchema.nullable(),analysisSource:z.enum(['host','manual']).nullable()});
 export const checkReminderInput=z.object({enabled:z.boolean(),breakfast:z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/).nullable(),lunch:z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/).nullable(),dinner:z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/).nullable()}).strict();
 export const checkReminderSchema=checkReminderInput.extend({version:z.number().int().positive()});
-export const experienceBackup=z.object({reminders:checkReminderSchema.default({enabled:false,breakfast:null,lunch:null,dinner:'21:00',version:1}),checks:z.array(checkSchema).max(100000).default([]),photos:z.array(photoSchema).max(200).default([]),nutrition:nutritionSchema.default({goal:'maintain',sex:null,activityLevel:null,heightCm:null,weightKg:null,age:null,calorieMin:null,calorieMax:null,proteinMin:null,carbMax:null,fatMax:null,version:1})}).strict();
+export const experienceBackup=z.object({goalConfig:goalConfigSchema.default(initialGoalConfig),reminders:checkReminderSchema.default({enabled:false,breakfast:null,lunch:null,dinner:'21:00',version:1}),checks:z.array(checkSchema).max(100000).default([]),photos:z.array(photoSchema).max(200).default([]),nutrition:nutritionSchema.default({goal:'maintain',sex:null,activityLevel:null,heightCm:null,weightKg:null,age:null,calorieMin:null,calorieMax:null,proteinMin:null,carbMax:null,fatMax:null,version:1})}).strict();
 export type Check=z.infer<typeof checkSchema>;
 export type Photo=z.infer<typeof photoSchema>;
 export type Nutrition=z.infer<typeof nutritionSchema>;

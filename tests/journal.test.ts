@@ -72,3 +72,22 @@ test('photo title and feedback enum survive backup, legacy defaults remain compa
  const legacy=JSON.parse(JSON.stringify(backup));delete legacy.journal.photos[0].title;delete legacy.journal.photos[0].analysis.feedback;
  s.restore(legacy,()=>{});assert.equal(s.journal.photo(p.id).title,'');assert.deepEqual(s.journal.photo(p.id).analysis!.feedback,[]);
 });
+
+test('task changes preserve historical goal sets, checks, denominators and backup/restart versions',t=>{
+ const {s,db,dir}=setup(t);s.journal.setCheck({localDate:'2026-10-09',slot:'lunch',status:'yes',occurrence:'completed'},0);
+ const cfg=s.journal.addGoal({label:'독서',controlType:'count',target:20},1),goal=cfg.revisions.at(-1)!.goals.at(-1)!;
+ assert.equal(s.snapshot().todayChecklist.length,5);assert.equal(s.journal.day('2026-10-09').goals.length,4);assert.equal(s.snapshot().goals.days[0]!.total,4);
+ assert.throws(()=>s.journal.removeGoal('lunch',1),/변경/);
+ s.journal.setCheck({localDate:'2026-10-10',slot:goal.id,controlType:'count',count:20,target:20,status:'no',occurrence:'completed'},0);assert.equal(s.snapshot().goals.days.find(d=>d.date==='2026-10-10')!.completed,1);
+ const tomorrow=new FitlogService(db,()=>new Date('2026-10-11T05:00:00Z'));tomorrow.journal.removeGoal(goal.id,2);assert.equal(tomorrow.snapshot().todayChecklist.length,4);assert.equal(tomorrow.journal.day('2026-10-10').goals.length,5);assert.equal(tomorrow.journal.day('2026-10-10').checks.find(c=>c.slot===goal.id)!.count,20);assert.equal(tomorrow.snapshot().goals.days.find(d=>d.date==='2026-10-10')!.total,5);
+ const backup=tomorrow.backup();tomorrow.restore(backup,()=>{});assert.equal(tomorrow.journal.day('2026-10-10').goals.length,5);assert.ok(tomorrow.journal.goalConfig().version>3);
+ const peer=openDatabase(dir);try{assert.equal(new FitlogService(peer).journal.goalsFor('2026-10-10').length,5);}finally{peer.close();}
+ const legacy=structuredClone(backup) as any;delete legacy.journal.goalConfig;assert.equal(tomorrow.validateBackup(legacy).journal.goalConfig.revisions[0]!.goals.length,4);
+});
+
+test('task removal retains checks while zero tasks produce a zero denominator',t=>{
+ const {s}=setup(t);s.journal.setCheck({localDate:'2026-10-10',slot:'lunch',status:'yes',occurrence:'completed'},0);
+ let version=1;for(const id of ['workout','breakfast','lunch','dinner'])s.journal.removeGoal(id,version++);
+ assert.equal(s.snapshot().todayChecklist.length,0);assert.equal(s.snapshot().goals.total,0);assert.equal(s.snapshot().goals.days[0]!.completed,0);assert.equal(s.snapshot().goals.days[0]!.level,0);assert.equal(s.journal.day('2026-10-10').checks.length,1);assert.throws(()=>s.journal.setCheck({localDate:'2026-10-10',slot:'lunch',status:'yes',occurrence:'completed'},1),/작업 목록/);
+ assert.throws(()=>s.journal.addGoal({label:'   '},version));assert.throws(()=>s.journal.addGoal({label:'합성',controlType:'count',target:0},version));
+});

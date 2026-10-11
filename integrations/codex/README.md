@@ -84,3 +84,7 @@ codex plugin remove fitlog@fitlog-personal
 
 ## 0.1.5 · 노트북 밀도
 최신 리소스 ui://fitlog/dashboard/v0.1.5.html. 기존 생성/설치 갱신 후 버전·캐시를 재조회한다. 지표 왼쪽/목록 오른쪽과 축소 밀도가 적용된다. 실제 MacBook/Codex 기본 창은 별도 수용 확인이 필요하다.
+
+
+## 0.1.6
+package/MCP/bridge/UI 리소스 ui://fitlog/dashboard/v0.1.6.html 버전을 통일했다(25도구). 빌드 후 node scripts/prepare-plugin.mjs, codex plugin add fitlog@fitlog-personal --json으로 소스/설치를 갱신한다. 이미 열린 서버/카드는 이전 코드를 유지할 수 있으므로 Codex 재시작 후 새 카드를 확인한다. 앱 강제 종료나 개인 DB 변경 없이 설치만 갱신하며 실제 호스트 수용은 따로 기록한다.

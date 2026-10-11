@@ -107,3 +107,13 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 
 ## 0.1.5 UX-009 · 노트북 창 밀도
 지표 왼쪽/목록 오른쪽, 최대 폭 760px·상단 32px·행 32px·목록 최대164px, 달력 240px/낮은 창 칸24px, 범례 제거. 사진 비율을 유지하고 창 높이로 축소한다. 실제 React+합성 SQLite/모사 bridge에서 960×640, 800×600, 720×540, 600×480 오늘/과거 화면 페이지 가로·세로 넘침 없음. 세로 사진/피드백3개/16작업/6주 달력·기존 날짜/작업 관리와 360px dark 회귀 통과. 합성720×540 화면 육안 확인. 타입/빌드/22개 시험·stdio MCP22도구/0.1.5리소스·백업/probe 통과. 실제 MacBook 및 Codex 기본 창 실측/새 카드 수용은 미검증. 프로젝트 MVP/HAN-8 In Progress 유지.
+
+
+## 0.1.6 · UX-010..013 · 2026-10-11
+- 통과: pnpm typecheck/build/test. 25개 저장·도메인 시험, 실제 stdio MCP25도구/새 URI, edit_goal/update_personal_info/claim_due_alarms, 시간대 동기화와 과거 날짜 보존, 재시작·백업 CLI/probe.
+- 신규 저장 시험: 이름/목표 수정과 오늘 count 유지·달성 재계산·유형 전환 초기화·버전 충돌·과거 이력/복원; 개인정보 유지 kcal와 미입력/나이 경계; 요일·일회성·간격·DST·claim 중복·재시작/복원과 삭제 로그 정리.
+- 브라우저: node --import tsx scripts/test-compact-ui.mjs. 실제 React+합성 임시 SQLite, 호스트/AI bridge 모사. 수정·취소·재조회, select/number 높이 동일, 추가/취소 영역, 자동 저장/계산/저장 버튼 제거, 8→80 중간 입력, 느린 첫 요청 중 새 초안이 최신 버전으로 후속 저장됨, 합성 저장 실패 시 오류/원본 유지→재시도, 닫기 직전 대기 초안 저장, 알림 추가/간격/활성/제거/재열기 확인.
+- 15px classic scrollbar CSS 강제 후 설정 전후 .compact x/width 동일·root gutter stable. 960×640/800×600/720×540/600×480 기본 화면 페이지 넘침 없음, 많은 목록·세로 사진·6주 달력 및 360px dark 회귀. 설정을 펼치면 의도적으로 페이지 세로 스크롤을 허용한다.
+- .local/ui-check/settings-desktop.png, laptop-720.png 등은 합성 테스트 결과이며 Git 제외. 설정 화면 육안 확인: 하단 개인정보/4개 값/한 줄 알림·수정 아이콘 배치 정상.
+- 실제 건강 DB/사진을 읽거나 수정하지 않음. 실제 Codex 재시작 후 새 카드, Mac 기본 창, dots 계정 연동, 실제 채팅 첨부·AI·OS 알림 수신은 미검증. 닫힌 앱/클라우드/모바일 알림은 제공하지 않음. claim 후 UI 종료 시 수신 보장 없음. 유지 추정은 개인 감량 처방이 아님.
+- 프로젝트 MVP, HAN-8 In Progress 유지. 자동 시험·설치·푸시를 실제 호스트 수용/제품화 전이 완료로 간주하지 않는다.

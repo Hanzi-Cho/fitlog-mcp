@@ -18,3 +18,25 @@
 @media(max-width:560px){.compact{padding:10px 12px}.daily-overview{grid-template-columns:1fr;gap:12px}.daily-metrics{justify-content:space-between}.streaks{display:flex;gap:24px}.checklist-scroll{max-height:192px}.daily-overview .journal-check{min-height:36px}.compact-bottom{grid-template-columns:1fr;gap:16px;margin-top:16px}.compact .mini-day{height:32px;min-height:32px}.imagebook{--photo-height:260px}.mini-month{max-width:none}}
 
 .nutrition-pill{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Shared scroll policy: reserve the gutter before overflow appears. */
+html{scrollbar-gutter:stable}
+.scroll-viewport{overflow:auto;scrollbar-gutter:stable;min-width:0;overscroll-behavior:contain}
+.history-scroll{max-height:160px}.day-achievements .history-scroll ul{max-height:none;overflow:visible}
+.edit-task{display:grid;place-items:center;padding:0;width:25px;min-width:25px;height:28px;min-height:28px;border:0;background:transparent;color:var(--muted,#777);border-radius:6px}
+.edit-task:hover{background:var(--surface,#eee);color:inherit}
+.task-editor-options{display:flex;gap:6px;align-items:center}
+.task-editor .task-editor-options select,.task-editor .task-editor-options input{box-sizing:border-box;height:34px;min-height:34px;margin:0;padding:5px 8px;flex:1;min-width:0;width:0}
+.task-editor-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+.task-editor .task-editor-actions button{min-height:32px;height:32px;padding:4px 14px;border:1px solid var(--line,#d1d5db);border-radius:8px;background:transparent}
+.task-editor .task-editor-actions button[type=submit]{background:#247a51;color:white;border-color:#247a51}
+
+.daily-overview .journal-check{grid-template-columns:minmax(0,1fr) auto 24px 24px}
+.config-panel{max-width:760px;padding:14px;margin-top:16px}.config-panel header h2{font-size:16px}.config-panel header small{font-size:12px;font-weight:400;color:var(--color-text-secondary,#7b8f80)}
+.personal-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.personal-fields .goal-field{grid-column:1/-1}.nutrition-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0 8px}.nutrition-summary dt{font-size:11px}.nutrition-summary dd{margin:6px 0;font-size:16px;font-variant-numeric:tabular-nums}.exercise-note{font-size:12px}.autosave-status{min-height:16px;font-size:11px;color:var(--color-text-secondary,#7b8f80);margin:6px 0}
+.alarm-list{max-height:260px}.alarm-row{display:flex;align-items:center;gap:6px;border-radius:14px;padding:8px;margin:8px 0;background:light-dark(#f1f5f1,#28382e)}
+.config-panel .alarm-row input,.config-panel .alarm-row select,.config-panel .alarm-row button{font-size:11px;min-height:32px;height:32px;padding:4px;border:0;border-radius:7px;width:auto;min-width:0;margin:0}.alarm-row>select{flex:0 0 58px}.alarm-row input[type=time]{flex:0 0 88px}.alarm-row input[type=date]{flex:0 1 120px}.alarm-row .alarm-name{flex:1;width:75px}.alarm-days{display:flex;gap:1px}.config-panel .alarm-days button{width:20px;padding:0;min-width:20px;color:var(--color-text-secondary,#7b8f80);background:transparent}.config-panel .alarm-days button[aria-pressed=true]{background:#287d53;color:white}.alarm-interval{display:flex;gap:2px}.config-panel .alarm-interval input{width:42px}.alarm-toggle[aria-pressed=true]{color:#287d53}.add-alarm{border:0;background:transparent;font-size:12px;min-height:32px}
+@media(max-width:650px){.alarm-row{flex-wrap:wrap}.alarm-row .alarm-name{min-width:90px}.nutrition-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.personal-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+textarea{scrollbar-gutter:stable}

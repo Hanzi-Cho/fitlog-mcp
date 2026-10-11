@@ -59,3 +59,7 @@ export는 기존 파일을 덮어쓰지 않습니다. import는 현재 기록을
 - `ui/src`: 실제 MCP Apps UI
 - `ui/preview.*`, `src/probe`: 합성 시안 및 연결 시험
 - `scripts`, `tests`: 빌드·개인용 패키지 생성·검증
+
+
+## 0.1.6 업데이트
+하단 개인정보 자동 저장·유지 영양 추정/운동 권장, 공통 스크롤 공간, 요일/일회성/간격 알림, 작업 수정과 공통 추가/취소 폼. [번호별 요구 UX-010..013](docs/requirements/UX.md), [현재 단계](docs/PROJECT.md), [검증·제한](docs/VALIDATION.md). 설치 갱신은 integrations/codex/README.md. 실제 열린 Codex 세션의 새 카드 수용은 설치 성공과 별도다.

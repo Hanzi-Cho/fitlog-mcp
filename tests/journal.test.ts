@@ -1,3 +1,5 @@
+import {dueOccurrence} from '../src/domain/alarms.js';
+import {alarmSchema} from '../src/contracts/experience.js';
 import {goalProgress} from '../src/domain/goals.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -90,4 +92,41 @@ test('task removal retains checks while zero tasks produce a zero denominator',t
  let version=1;for(const id of ['workout','breakfast','lunch','dinner'])s.journal.removeGoal(id,version++);
  assert.equal(s.snapshot().todayChecklist.length,0);assert.equal(s.snapshot().goals.total,0);assert.equal(s.snapshot().goals.days[0]!.completed,0);assert.equal(s.snapshot().goals.days[0]!.level,0);assert.equal(s.journal.day('2026-10-10').checks.length,1);assert.throws(()=>s.journal.setCheck({localDate:'2026-10-10',slot:'lunch',status:'yes',occurrence:'completed'},1),/작업 목록/);
  assert.throws(()=>s.journal.addGoal({label:'   '},version));assert.throws(()=>s.journal.addGoal({label:'합성',controlType:'count',target:0},version));
+});
+
+test('editing today goals preserves history/progress and rejects stale checklist writes',t=>{
+ const {s}=setup(t),j=s.journal;
+ j.setCheck({localDate:'2026-10-09',slot:'workout',label:'옛 운동',status:'yes',occurrence:'completed'},0);
+ j.setCheck({localDate:'2026-10-10',slot:'workout',controlType:'count',label:'스쿼트',count:50,target:100,status:'no',occurrence:'completed'},0);
+ j.editGoal('workout',{label:'스쿼트 수정',controlType:'count',target:40},1);
+ assert.equal(j.day('2026-10-09').goals[0]!.label,'운동');assert.equal(j.checks('2026-10-09')[0]!.label,'옛 운동');
+ const check=j.checks('2026-10-10')[0]!;assert.equal(check.count,50);assert.equal(check.status,'yes');assert.equal(check.version,2);assert.equal(s.snapshot().todayChecklist[0]!.label,'스쿼트 수정');
+ const {version,...staleCheck}=check;assert.throws(()=>j.setCheck(staleCheck,1),/변경/);assert.throws(()=>j.editGoal('workout',{label:'오래된 요청'},1),/변경/);
+ j.editGoal('workout',{label:'운동',controlType:'binary'},2);assert.equal(j.checks('2026-10-10')[0]!.status,'no');assert.equal(j.checks('2026-10-10')[0]!.count,0);
+ const backup=s.backup();s.restore(backup,()=>{});assert.equal(s.snapshot().todayChecklist[0]!.label,'운동');
+});
+test('personal information calculates reference targets without inventing a deficit',t=>{
+ const {s}=setup(t),j=s.journal;
+ const p=j.setPersonalInfo({goalText:'감량하고 꾸준히 운동',sex:'male',age:30,heightCm:180,weightKg:80},1);
+ assert.equal(p.calorieMax,2490);assert.equal(p.proteinMin,64);assert.equal(p.carbMax,404);assert.equal(p.fatMax,96);assert.equal(p.calorieMin,null);assert.equal(p.autoTargets,true);
+ assert.equal(j.setPersonalInfo({goalText:'유지',sex:null,age:30,heightCm:180,weightKg:80},p.version).calorieMax,null);
+ assert.throws(()=>j.setPersonalInfo({goalText:'',sex:'male',age:17,heightCm:180,weightKg:80},3));assert.throws(()=>j.setPersonalInfo({goalText:'',sex:'male',age:30.5,heightCm:180,weightKg:80},3));
+ assert.equal(j.day('2026-10-10').nutrition.goalText,'유지');const backup=s.backup();s.restore(backup,()=>{});assert.equal(j.nutrition().autoTargets,true);
+});
+
+test('recurring and one-time alarms use timezone/DST and durable at-most-once claims',t=>{
+ const {s,db}=setup(t),j=s.journal;
+ const alarm=alarmSchema.parse({id:'test-alarm',name:'테스트',enabled:true,kind:'weekdays',days:[6],startDate:'2026-10-10',time:'13:00',every:2,unit:'hours'});
+ j.setReminders({enabled:false,breakfast:null,lunch:null,dinner:null,alarms:[alarm]},1);
+ assert.equal(j.claimDueAlarms('Asia/Seoul').length,1);assert.equal(j.claimDueAlarms('Asia/Seoul').length,0);
+ const restarted=new FitlogService(db,()=>new Date('2026-10-10T05:00Z'));assert.equal(restarted.journal.claimDueAlarms('Asia/Seoul').length,0);
+ const backup=s.backup();s.restore(backup,()=>{});assert.equal(j.claimDueAlarms('Asia/Seoul').length,0);
+ assert.equal(dueOccurrence({...alarm,kind:'once'},new Date('2026-10-09T05:00Z'),'Asia/Seoul'),null);
+ assert.ok(dueOccurrence({...alarm,kind:'once'},new Date('2026-10-11T05:00Z'),'Asia/Seoul'));
+ assert.equal(dueOccurrence({...alarm,days:[1]},new Date('2026-10-10T05:00Z'),'Asia/Seoul'),null);
+ const interval={...alarm,kind:'interval' as const};assert.equal(dueOccurrence(interval,new Date('2026-10-10T05:00Z'),'Asia/Seoul'),dueOccurrence(interval,new Date('2026-10-10T05:59Z'),'Asia/Seoul'));assert.notEqual(dueOccurrence(interval,new Date('2026-10-10T06:00Z'),'Asia/Seoul'),dueOccurrence(interval,new Date('2026-10-10T05:00Z'),'Asia/Seoul'));
+ assert.equal(dueOccurrence({...interval,unit:'days',every:2},new Date('2026-10-11T05:00Z'),'Asia/Seoul'),null);assert.ok(dueOccurrence({...interval,unit:'days',every:2},new Date('2026-10-12T05:00Z'),'Asia/Seoul'));
+ assert.equal(dueOccurrence({...alarm,kind:'once',startDate:'2026-03-08',time:'02:30'},new Date('2026-03-08T09:00Z'),'America/New_York'),null);
+ const fall={...alarm,days:[0],time:'01:30'};assert.equal(dueOccurrence(fall,new Date('2026-11-01T05:45Z'),'America/New_York'),dueOccurrence(fall,new Date('2026-11-01T06:45Z'),'America/New_York'));
+ j.setReminders({enabled:false,breakfast:null,lunch:null,dinner:null,alarms:[]},j.reminders().version);assert.equal(s.backup().journal.alarmDeliveries.length,0);
 });

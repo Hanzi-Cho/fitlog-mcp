@@ -1,0 +1,38 @@
+import test, { type TestContext } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { openDatabase } from '../src/infrastructure/database.js';
+import { FitlogService } from '../src/application/service.js';
+import { validDate, localToday } from '../src/domain/dates.js';
+import { publicError } from '../src/contracts/errors.js';
+function setup(t:TestContext,now='2026-10-10T05:00:00Z'){const dir=mkdtempSync(join(tmpdir(),'fitlog-test-'));const db=openDatabase(dir);t.after(()=>db.close());return {dir,db,service:new FitlogService(db,()=>new Date(now))};}
+const workout=(date='2026-10-10',title='합성 운동')=>({type:'workout',localDate:date,title,durationMinutes:20});
+const meal=(date='2026-10-10')=>({type:'meal',localDate:date,title:'합성 식단',mealType:'lunch'});
+
+test('today checklist deduplicates records, ignores filters and tracks edits, deletes and midnight',t=>{
+ const {service,db}=setup(t);
+ assert.equal(service.snapshot().todayChecklist.filter(t=>t.done).length,0);
+ const lunch=service.create(meal(),'check-lunch-001').activity;
+ const extra=service.create(meal(),'check-lunch-002').activity;
+ service.create({...meal(),mealType:'snack'},'check-snack-001');
+ service.create(workout('2026-10-09'),'check-yesterday');
+ assert.deepEqual(service.snapshot('workout').todayChecklist.filter(t=>t.done).map(t=>t.id),['lunch']);
+ service.delete(extra.id,1);
+ service.update(lunch.id,{...meal(),mealType:'breakfast'},1);
+ assert.deepEqual(service.snapshot().todayChecklist.filter(t=>t.done).map(t=>t.id),['breakfast']);
+ assert.equal(new FitlogService(db,()=>new Date('2026-10-10T15:00:00Z')).snapshot().todayChecklist.filter(t=>t.done).length,0);
+ service.delete(lunch.id,2);
+ assert.equal(service.snapshot().todayChecklist.filter(t=>t.done).length,0);
+});
+test('actual SQLite persistence, retries and tombstone idempotency',t=>{const {service,dir}=setup(t);const a=service.create(workout(),'request-001');assert.equal(service.create(workout(),'request-001').activity.id,a.activity.id);assert.equal(service.list({}).items.length,1);assert.throws(()=>service.create(workout(undefined,'다른 내용'),'request-001'),/다른 내용/);const second=openDatabase(dir);try{assert.equal(new FitlogService(second).get(a.activity.id).title,'합성 운동');}finally{second.close();}service.delete(a.activity.id,1);assert.equal(service.delete(a.activity.id,1).alreadyDeleted,true);assert.throws(()=>service.create(workout(),'request-001'),/삭제됐습니다/);});
+test('unique days, category counts, current and longest streak after edit/delete',t=>{const {service}=setup(t);service.create(workout(),'request-001');const a=service.create(workout(),'request-002').activity;service.create(meal(),'request-003');service.create(workout('2026-10-09'),'request-004');const s=service.snapshot();assert.equal(s.progress.recordedDays,2);assert.equal(s.progress.currentStreak,2);assert.deepEqual(s.progress.days.at(-1),{date:'2026-10-10',workout:2,meal:1});service.update(a.id,workout('2026-10-08'),1);assert.equal(service.snapshot().progress.longestStreak,3);assert.equal(service.snapshot('meal').progress.recordedDays,1);service.delete(a.id,2);assert.equal(service.snapshot().progress.longestStreak,2);});
+test('yesterday continues streak and gaps reset it',t=>{const {service,db}=setup(t);service.create(workout('2026-10-09'),'request-001');service.create(workout('2026-10-08'),'request-002');assert.equal(service.snapshot().progress.currentStreak,2);const other=new FitlogService(db,()=>new Date('2026-10-11T05:00:00Z'));assert.equal(other.snapshot().progress.currentStreak,0);});
+test('calendar boundaries and timezone historical stability',t=>{assert.equal(validDate('2025-02-29'),false);assert.equal(validDate('2024-02-29'),true);assert.equal(localToday('Asia/Seoul',new Date('2026-12-31T15:00:00Z')),'2027-01-01');const {service}=setup(t);const a=service.create(workout(),'request-001').activity;service.updateProfile({displayName:'시험',handle:'tester',timezone:'America/Los_Angeles'},1);assert.equal(service.get(a.id).localDate,'2026-10-10');assert.equal(service.get(a.id).timezone,'Asia/Seoul');assert.throws(()=>service.updateProfile({displayName:'시험',handle:'tester',timezone:'Not/AZone'},2));});
+test('invalid inputs and future records are rejected without changing state',t=>{const {service}=setup(t);for(const a of [workout('2026-10-11'),workout('2026-02-30'),{...workout(),durationMinutes:NaN},{...meal(),mealType:null},{...workout(),title:' '},{...workout(),mealType:'lunch'}])assert.throws(()=>service.create(a,'request-001'));assert.equal(service.list({}).items.length,0);});
+test('two sessions detect stale writes, profile versions and DB lock',t=>{const {service,dir,db}=setup(t);const second=openDatabase(dir);t.after(()=>second.close());const peer=new FitlogService(second,()=>new Date('2026-10-10T05:00:00Z'));const a=service.create(workout(),'request-001').activity;peer.update(a.id,workout(undefined,'수정본'),1);assert.throws(()=>service.update(a.id,workout(),1),/다른 세션/);assert.throws(()=>service.delete(a.id,1),/변경됐습니다/);peer.updateProfile({displayName:'새 이름',handle:'new_name',timezone:'Asia/Seoul'},1);assert.throws(()=>service.updateProfile({displayName:'이전',handle:'old',timezone:'Asia/Seoul'},1),/변경됐습니다/);db.exec('PRAGMA busy_timeout=10');second.exec('BEGIN IMMEDIATE');try{assert.equal(publicError(capture(()=>service.create(workout(),'request-002'))).code,'STORAGE_BUSY');}finally{second.exec('ROLLBACK');}});
+function capture(fn:()=>unknown){try{fn();throw Error('expected failure');}catch(e){return e;}}
+test('bounded cursor pages do not duplicate or omit records',t=>{const {service}=setup(t);for(let i=0;i<6;i++)service.create(workout(i<3?'2026-10-10':'2026-10-09'),`request-${i}`);let page=service.list({limit:2});const ids=page.items.map(a=>a.id);while(page.nextCursor){page=service.list({limit:2,cursor:page.nextCursor});ids.push(...page.items.map(a=>a.id));}assert.equal(new Set(ids).size,6);assert.equal(ids.length,6);assert.throws(()=>service.list({cursor:'bad'}));assert.throws(()=>service.list({limit:201}));assert.throws(()=>service.list({from:'2026-10-10',to:'2026-10-09'}));});
+test('backup recovery preserves values, protects old DB and invalidates stale versions',t=>{const {service}=setup(t);const a=service.create(meal(),'request-001').activity;const backup=service.backup();service.update(a.id,{...meal(),title:'새 기록'},1);assert.throws(()=>service.restore({...backup,schemaVersion:2},()=>assert.fail()));assert.throws(()=>service.restore({...backup,activities:[a,a]},()=>assert.fail()));assert.throws(()=>service.restore(backup,()=>{throw Error('disk full');}));assert.equal(service.get(a.id).title,'새 기록');let saved;service.restore(backup,s=>{saved=s;});assert.ok(saved);assert.equal(service.get(a.id).title,'합성 식단');assert.equal(service.get(a.id).version,3);assert.throws(()=>service.update(a.id,meal(),1));assert.equal(service.create(meal(),'request-001').replayed,true);});
+test('fixed reminders are preferences/request only; review uses actual bounded facts',t=>{const {service}=setup(t);service.create(meal(),'request-001');service.create(meal('2026-09-01'),'request-002');const r=service.reminderRequest();assert.equal(r.reminder.time,'21:00');assert.equal(r.registrationStatus,'not_verified');assert.match(r.request,/로컬 파일이나 건강 기록을 조회하지 마/);assert.throws(()=>service.updateReminder({...r.reminder,time:'25:00'},1));const {version,...input}=r.reminder;assert.equal(service.updateReminder({...input,time:'20:30'},version).reminder.version,2);assert.equal(service.review(7).meals,1);assert.equal(service.review(7).missingDays,6);});

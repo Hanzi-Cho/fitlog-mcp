@@ -1,0 +1,38 @@
+{
+  "name": "fitlog-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local fitness and meal tracking with a Codex embedded MCP App.",
+  "engines": {
+    "node": ">=24.13 <25"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/core.test.ts tests/journal.test.ts && node scripts/test-mcp.mjs && node scripts/test-backup.mjs && node scripts/test-probe.mjs",
+    "probe": "node dist/probe.mjs",
+    "start": "node dist/main.mjs",
+    "backup": "node dist/backup.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.3.1",
+    "@modelcontextprotocol/core": "2.3.1",
+    "@modelcontextprotocol/ext-apps": "2.0.3",
+    "@modelcontextprotocol/server": "2.3.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

@@ -1,0 +1,15 @@
+import { build } from 'esbuild';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
+await mkdir('dist', { recursive: true });
+const ui = await build({ entryPoints: ['ui/probe.tsx'], bundle: true, minify: true, format: 'iife', platform: 'browser', target: 'es2022', write: false, define: { 'process.env.NODE_ENV': '"production"' } });
+const js = ui.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
+const css = await readFile('ui/preview.css', 'utf8');
+await writeFile('dist/probe.html', `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style></head><body><div id="root"></div><script>${js}</script></body></html>`);
+await build({ entryPoints: ['src/probe/main.ts'], outfile: 'dist/probe.mjs', bundle: true, packages: 'external', format: 'esm', platform: 'node', target: 'node24' });
+if (process.argv.includes('--probe-only')) process.exit(0);
+const dashboard = await build({ entryPoints: ['ui/src/main.tsx'], bundle:true, minify:true, format:'iife', platform:'browser', target:'es2022', write:false, define:{'process.env.NODE_ENV':'"production"'} });
+const dashboardJs=dashboard.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
+const dashboardCss=(await readFile('ui/src/styles.css','utf8'))+'\n'+(await readFile('ui/src/compact.css','utf8'));
+await writeFile('dist/dashboard.html',`<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}\n${dashboardCss}</style></head><body><div id="root"></div><script>${dashboardJs}</script></body></html>`);
+await build({entryPoints:['src/mcp/main.ts'],outfile:'dist/main.mjs',bundle:true,packages:'external',format:'esm',platform:'node',target:'node24'});
+await build({entryPoints:['src/cli/backup.ts'],outfile:'dist/backup.mjs',bundle:true,packages:'external',format:'esm',platform:'node',target:'node24'});

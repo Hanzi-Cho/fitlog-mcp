@@ -1,0 +1,28 @@
+# Fitlog MCP
+
+Linear project: https://linear.app/hanzicho/project/ai-헬스-식단-자기관리-플러그인-f38af4bd8e45
+Approved design: docs/DESIGN.md (2026-10-10 user approval).
+
+- Build for Codex first, one local user, exercise and meal records. Embedded UI is required.
+- Weight tracking, Claude compatibility and external modules remain later work. Photos and local reminder settings are in the authorized HAN-7 expansion; actual host/background/mobile acceptance remains separate.
+- Use TypeScript, React, SQLite and standard MCP Apps. Keep domain calculations independent of the UI and transport.
+- Never commit real health records, databases, backups, credentials or machine-local configuration.
+- G0 requires actual Codex embedded rendering and tool interaction. A browser harness or tool-only test is not host validation.
+- Read current Linear state before updates and verify writes afterward. Preserve existing work.
+- Run typecheck, build and meaningful tests. Record actual results and unverified host checks in docs/VALIDATION.md.
+- 2026-10-11: the user explicitly requested pushing the current fitlog-mcp work to Hanzi-Cho/fitlog-mcp, superseding the earlier delivery wait for host acceptance. Commit only source/docs/tests and dependency metadata; exclude personal records, photos, DBs, backups, credentials and local configuration. Keep actual-host acceptance pending and verify the remote commit after pushing.
+
+- HAN-7 user expansion (2026-10-10): explicit goal checks/meal occurrence, local photos, personal nutrition targets and host AI analysis, PC-first UI are authorized. Original later-work limits above are superseded for these features. No new paid API/cloud photo storage. Actual host and background/mobile acceptance remain separate.
+
+<!-- productization-flow:start -->
+## Productization workflow / 2026-10-11
+
+- Apply the common lifecycle and productization criteria: https://linear.app/hanzicho/document/bf273c53e2b9. On this Windows Codex home also read C:/Users/whwog/.codex/guides/linear-workflow/LINEAR-WORKFLOW.md. Treat this as persistent guidance requested by the user for dots; do not assume installation on other hosts.
+- The user evaluates real usage and UX. The agent owns authorized engineering checks and records evidence for real integration, reliability, data migration/backup/restore/deletion, privacy/security/permissions, installation/upgrades, performance/capacity, accessibility/compatibility, regressions, incident recovery/rollback and release/measurement preparation.
+- Record applicability, owner, acceptance criteria, environment/version, results/evidence and residual work. Distinguish passed, failed, unverified, agreed deferral and not applicable (with reasons). Do not enable telemetry, paid services or cloud photo storage from this documentation request.
+- Keep Fitlog at MVP until its agreed actual-host acceptance is evidenced and productization scope/start is approved by current or valid prior authorization. This request documents the workflow and does not itself authorize a project transition. Do not repeat already granted permissions.
+- Existing implementation/harness passes do not prove actual Codex production UI/new-chat access, host sampling/image recognition, camera/folder permissions, OS notifications or cloud/mobile delivery. Reconcile HAN-5/HAN-6/HAN-7 and docs/VALIDATION.md when resuming.
+- For productization, verify photo/DB consistency and deletion, versioned backup/restore and upgrade recovery, permission refusal/AI failure and correction, storage limits, restart persistence, supported PC host/keyboard flows and reproducible installation. Gather actual-host evidence for the approved core flow before claiming acceptance.
+- Closed-app camera/library access, background/cloud/mobile delivery and automatic sidebar pinning/ordering remain unverified or unsupported pending capability checks. Keep them explicitly limited or agree follow-up scope; do not promise them from metadata or mocks.
+- Productization→Release/Analytics requires an evidenced release candidate, resolved blocking defects, agreed nonblocking deferrals, and approved release/operations/measurement scope. Record before→after stage, evidence, approval source and next actions in Linear; read before writes and verify afterward. Stage movement does not prove deployment.
+<!-- productization-flow:end -->

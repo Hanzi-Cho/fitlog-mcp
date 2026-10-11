@@ -66,9 +66,9 @@ export class FitlogService {
   snapshot(type: 'all' | 'workout' | 'meal' = 'all') {
     // One read transaction gives the UI one consistent revision across concurrent clients.
     return this.repository.transaction(() => { const profile = this.getProfile(); const today = localToday(profile.timezone, this.now()); const records=this.all(); const todays=records.filter(r=>r.localDate===today);
-      const todayChecklist=[{id:'workout',label:'운동 기록',done:todays.some(r=>r.type==='workout')},...(['breakfast','lunch','dinner'] as const).map((id,i)=>({id,label:['아침 기록','점심 기록','저녁 기록'][i]!,done:todays.some(r=>r.type==='meal'&&r.mealType===id)}))];
+      const todayChecklist=[{id:'workout',label:'운동',done:todays.some(r=>r.type==='workout')},...(['breakfast','lunch','dinner'] as const).map((id,i)=>({id,label:['아침 식사','점심 식사','저녁 식사'][i]!,done:todays.some(r=>r.type==='meal'&&r.mealType===id)}))];
       const checks=this.journal.checks(today);
-      const checklist=todayChecklist.map(t=>{const c=checks.find(c=>c.slot===t.id);return {...t,status:c?.status??'unwritten',occurrence:c?.occurrence??(t.done?'completed':'unknown'),version:c?.version??0,note:c?.note??''};});
+      const checklist=todayChecklist.map(t=>{const c=checks.find(c=>c.slot===t.id);return {...t,label:c?.label||t.label,controlType:c?.controlType??'binary',count:c?.count??0,target:c?.target??1,status:c?.status??'unwritten',occurrence:c?.occurrence??(t.done?'completed':'unknown'),version:c?.version??0,note:c?.note??''};});
       const allChecks=this.journal.allChecks();
       const visibleChecks=type==='all'?allChecks:allChecks.filter(c=>type==='workout'?c.slot==='workout':c.slot!=='workout');
       return { schemaVersion: 1, revision: Number(this.setting('revision')), profile, today, todayChecklist:checklist, goals:goalProgress(allChecks,today), progress: progress([...records,...this.journal.photoDays()], today, type,checkedRecordDates(visibleChecks,today)), recent: this.list({ type }), reminder: this.reminderRequest() }; },false);

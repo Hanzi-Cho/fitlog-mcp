@@ -1,4 +1,5 @@
-import {Checks, JournalPanel} from './JournalPanel.js';
+import {Checks} from './Checks.js';
+import {Imagebook} from './Imagebook.js';
 import {DailyMetrics} from './DailyMetrics.js';
 import {ReminderPanel} from './ReminderPanel.js';
 import {useState} from 'react';
@@ -16,9 +17,9 @@ export function Compact({snapshot,onOpen,onRefresh,onCheck,busy}:{
  const goals=new Map(snapshot.goals.days.map(d=>[d.date,d]));
  const tasks=snapshot.todayChecklist,done=tasks.filter(t=>t.status==='yes').length;
  return <main className="compact" aria-label="Fitlog 미니 대시보드">
-  <header className="compact-header"><strong>Fitlog</strong><time>{snapshot.today}</time><nav aria-label="대시보드 도구"><button disabled={busy} onClick={()=>void onRefresh()} aria-label="기록 새로고침">↻</button><button onClick={()=>onOpen(selected)}>상세 보기 ↗</button></nav></header>
+  <header className="compact-header"><h1>오늘의 체크리스트</h1><button className="config-button" onClick={()=>onOpen()} aria-label="프로필 및 설정" title="프로필 및 설정"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="m9 3-.6 2.1-1.7 1L4.5 5.6 2.8 8.5l1.6 1.6v2l-1.6 1.6 1.7 2.9 2.2-.5 1.7 1L9 19.2h3.4l.6-2.1 1.7-1 2.2.5 1.7-2.9-1.6-1.6v-2l1.6-1.6-1.7-2.9-2.2.5-1.7-1L12.4 3Z" transform="translate(1 1)"/><circle cx="11.7" cy="12.1" r="3"/></svg></button></header>
   <div className="daily-overview">
-   <section className="checklist-column" aria-label="오늘 체크리스트"><h2>오늘 체크리스트</h2><div className="checklist-scroll"><Checks date={snapshot.today} busy={busy} checks={tasks.map(t=>({localDate:snapshot.today,slot:t.id as 'workout'|'breakfast'|'lunch'|'dinner',status:t.status as 'yes'|'no'|'unwritten',occurrence:t.occurrence as 'unknown'|'completed'|'skipped'|'planned',version:t.version,note:t.note}))} onSave={onCheck}/></div></section>
+   <section className="checklist-column" aria-label="오늘 체크리스트"><div className="checklist-scroll"><Checks date={snapshot.today} busy={busy} checks={tasks.map(t=>({localDate:snapshot.today,slot:t.id as 'workout'|'breakfast'|'lunch'|'dinner',controlType:t.controlType,label:t.label,count:t.count,target:t.target,status:t.status as 'yes'|'no'|'unwritten',occurrence:t.occurrence as 'unknown'|'completed'|'skipped'|'planned',version:t.version,note:t.note}))} onSave={onCheck}/></div></section>
    <DailyMetrics longest={snapshot.progress.longestStreak} current={snapshot.progress.currentStreak} done={done} total={tasks.length}/>
   </div>
   <ReminderPanel today={snapshot.today} compact onOpen={()=>document.querySelector('.checklist-column')?.scrollIntoView({behavior:'smooth'})}/>
@@ -28,7 +29,7 @@ export function Compact({snapshot,onOpen,onRefresh,onCheck,busy}:{
     <div className="mini-grid">{['일','월','화','수','목','금','토'].map(d=><span className="weekday" key={d}>{d}</span>)}{Array.from({length:month.getUTCDay()},(_,i)=><span key={`blank${i}`}/>)}{dates.map(date=>{const d=goals.get(date),count=d?.completed??0,total=d?.total??snapshot.goals.total;return <button key={date} className={`mini-day level-${d?.level??0}`} aria-label={`${date} 목표 ${count}/${total}`} title={`${date} · 목표 ${count}/${total}`} aria-pressed={date===selected} disabled={date>snapshot.today} onClick={()=>setSelected(date)}>{Number(date.slice(-2))}</button>;})}</div>
     <p className="mini-legend">적음 {[0,1,2,3,4].map(n=><i key={n} className={`level-${n}`}/>)} 모두 달성</p>
    </section>
-   <JournalPanel date={selected} revision={snapshot.revision} mode="compact" onRefresh={onRefresh}/>
+   <Imagebook date={selected} today={snapshot.today} revision={snapshot.revision}/>
   </div>
  </main>;
 }

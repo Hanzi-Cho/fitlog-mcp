@@ -85,3 +85,11 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - pnpm typecheck/build/test passed (18/18, real stdio MCP discovery/CRUD/restart, backup/probe). Fresh synthetic MCP client successfully read the new versioned resource and found 20 tools.
 - Executed node scripts/prepare-plugin.mjs and codex plugin add fitlog@fitlog-personal --json. Read-back installed=true/enabled=true/version=0.1.2. Cache path ~/.codex/plugins/cache/fitlog-personal/fitlog/0.1.2; source/cache manifest SHA-256 matched, both manifest versions matched and .mcp.json pointed to this repo dist/main.mjs. Direct MCP registration also points to the same production server.
 - Health DB/photo/backup contents were not read or modified. App-wide restart was not forced during the active chat. Fully quit/reopen Codex and open a fresh Fitlog card to reload the running MCP/tool registry/UI; actual post-restart host acceptance is pending. Installing/updating the cache alone is not proof that an already-open card refreshed.
+
+## 0.1.3 간소화 검증 · 2026-10-11
+
+- pnpm typecheck / build / test 통과. 20개 저장·도메인 시험: 횟수 달성/감소/충돌/백업, title/feedback enum·구버전 누락 필드 기본값 추가. 실제 stdio MCP·새 URI·재시작, 백업 CLI, probe 통과.
+- node --import tsx scripts/test-compact-ui.mjs: 실제 React+합성 SQLite, 호스트 bridge/첨부/AI는 모사. 단일 binary 체크/횟수 50→100→99·저장/재조회, 프로필/영양/알림 저장, 채팅 첨부 모사 저장 후 자동 조회, 읽기 이미지북/추천 pill/이전다음/날짜/재조회, 0~4 잔디, PC 좌우 동일 폭/300px 달력, 프레임=이미지, 360px dark 넘침 없음, JS 오류 없음. 합성 PC/좁은 화면 육안 확인.
+- 실제 Codex 내 최신 카드·자연어/채팅 첨부 bytes 전달·AI 품질은 미검증. 설치 갱신과 활성 앱 세션 재시작은 별개다. 개인 건강 DB/사진을 시험 fixture로 사용하지 않았다. 이전 카메라/폴더/앱 업로드 수용 항목은 최신 UX 개정으로 제외한다.
+
+설치 확인(2026-10-11): prepare-plugin 및 codex plugin add 이후 Fitlog installed=true, enabled=true, version=0.1.3. 소스/캐시 manifest 해시 일치 확인. 활성 Codex 세션의 재시작/새 카드 수용은 별도 미검증이며 강제 종료하지 않았다.

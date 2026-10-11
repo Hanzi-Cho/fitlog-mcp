@@ -1,5 +1,5 @@
 import { App, applyDocumentTheme, applyHostStyleVariables } from '@modelcontextprotocol/ext-apps';
-export const bridge = new App({name:'Fitlog',version:'0.1.2'});
+export const bridge = new App({name:'Fitlog',version:'0.1.3'});
 export class ToolError extends Error { constructor(public code:string,message:string){super(message);} }
 export async function call<T>(name:string,args:Record<string,unknown>={}):Promise<T>{
   const result=await bridge.callServerTool({name,arguments:args});

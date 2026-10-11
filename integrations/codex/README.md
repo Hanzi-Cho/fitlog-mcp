@@ -71,3 +71,10 @@ codex plugin remove fitlog@fitlog-personal
 5. 앱을 완전히 종료하고 다시 실행한 뒤 Fitlog를 새로 연다. 이미 열려 있는 카드나 진행 중 채팅의 이전 MCP 도구 목록은 최신 UI/서버라는 근거가 아니다. 새 생산 서버 도구 20개와 버전 UI 리소스를 확인한다.
 
 이 과정은 건강 DB/사진/백업을 수정하지 않는다. 자동 업데이트 완료는 설치 재조회와 실제 재시작/수용을 각각 확인한 뒤 기록한다. 공식 안내: https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually
+
+## 0.1.3 최신 UI · 2026-10-11
+
+상단 제목/설정, 단일 체크 또는 횟수, PC 300px 달력과 읽기 이미지북으로 변경했다. 업로드/촬영/폴더 버튼은 없으며 사진은 이 채팅에 첨부한다. 실제 첨부 bytes 전달과 AI 인식은 호스트 지원 및 수용 확인이 필요하다.
+생성/설치 절차는 위와 같으며 현재 버전은 0.1.3, UI URI는 ui://fitlog/dashboard/v0.1.3.html이다. 설치 목록·캐시 manifest를 재조회한 뒤 Codex를 완전히 종료/다시 실행하고 새 Fitlog 카드를 연다. 이미 열려 있던 카드의 내용은 자동 교체를 보장하지 않는다. 과거 ‘미니 대시보드/PiP’ 절은 당시 이력이며 최신 requirements/UX.md가 우선한다.
+
+설치 확인(2026-10-11): prepare-plugin 및 codex plugin add 이후 Fitlog installed=true, enabled=true, version=0.1.3. 소스/캐시 manifest 해시 일치 확인. 활성 Codex 세션의 재시작/새 카드 수용은 별도 미검증이며 강제 종료하지 않았다.

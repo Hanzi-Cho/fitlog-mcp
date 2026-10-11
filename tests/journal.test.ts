@@ -53,3 +53,22 @@ test('goal intensity handles variable N, duplicates, planned and future checks',
  assert.equal(goalProgress([{...base,localDate:'2026-10-11'}],base.localDate,['a']).days.length,0);
  assert.equal(goalProgress([base],base.localDate,[]).days[0]!.ratio,0);
 });
+
+test('count control derives attainment at target, supports reversal/conflicts and backup persistence',t=>{
+ const {s}=setup(t);const check={localDate:image.localDate,slot:'workout',label:'스쿼트',controlType:'count',count:50,target:100,status:'yes',occurrence:'completed'};
+ const first=s.journal.setCheck(check,0);assert.equal(first.status,'no');assert.equal(s.snapshot().goals.days[0]!.completed,0);assert.equal(s.snapshot().todayChecklist[0]!.count,50);
+ assert.throws(()=>s.journal.setCheck({...check,count:100},0),/변경/);
+ const done=s.journal.setCheck({...check,count:100,status:'no'},1);assert.equal(done.status,'yes');assert.equal(s.snapshot().goals.days[0]!.completed,1);
+ s.journal.setCheck({...check,count:99},2);assert.equal(s.snapshot().goals.days[0]!.completed,0);
+ const backup=s.backup();s.restore(backup,()=>{});const restored=s.journal.checks(image.localDate)[0]!;assert.equal(restored.count,99);assert.equal(restored.target,100);assert.equal(restored.label,'스쿼트');assert.equal(restored.controlType,'count');
+ for(const patch of [{count:-1},{count:0.5},{target:0},{controlType:'dropdown'}])assert.throws(()=>s.journal.setCheck({...check,...patch},restored.version));
+});
+
+test('photo title and feedback enum survive backup, legacy defaults remain compatible',t=>{
+ const {s}=setup(t);const p=s.journal.addPhoto({...image,title:'오늘의 점심식사'});
+ s.journal.saveAnalysis(p.id,{...estimate,feedback:[{code:'protein_low'},{code:'meal_suggestion',text:'저녁은 고등어를 추천해요'}]},1,'host');
+ const backup=s.backup();s.restore(backup,()=>{});const saved=s.journal.photo(p.id);assert.equal(saved.title,'오늘의 점심식사');assert.equal(saved.analysis!.feedback[1]!.text,'저녁은 고등어를 추천해요');
+ assert.throws(()=>s.journal.saveAnalysis(p.id,{...estimate,feedback:[{code:'unsupported'}]},saved.version,'host'));
+ const legacy=JSON.parse(JSON.stringify(backup));delete legacy.journal.photos[0].title;delete legacy.journal.photos[0].analysis.feedback;
+ s.restore(legacy,()=>{});assert.equal(s.journal.photo(p.id).title,'');assert.deepEqual(s.journal.photo(p.id).analysis!.feedback,[]);
+});

@@ -13,8 +13,8 @@ import { publicError } from '../contracts/errors.js';
 
 const db = openDatabase(dataDirectory());
 const service = new FitlogService(db);
-const server = new McpServer({ name:'fitlog-mcp', version:'0.1.6' });
-const uri = 'ui://fitlog/dashboard/v0.1.6.html';
+const server = new McpServer({ name:'fitlog-mcp', version:'0.1.7' });
+const uri = 'ui://fitlog/dashboard/v0.1.7.html';
 function result(fn: () => unknown) { try { const data = fn(); return { content:[{type:'text' as const,text:JSON.stringify(data)}], structuredContent:{ ok:true, data } }; } catch(error) { const data=publicError(error); return { isError:true, content:[{type:'text' as const,text:data.message}], structuredContent:{ok:false,error:data} }; } }
 const read = { readOnlyHint:true, openWorldHint:false };
 const write = { readOnlyHint:false, destructiveHint:false, idempotentHint:true, openWorldHint:false };

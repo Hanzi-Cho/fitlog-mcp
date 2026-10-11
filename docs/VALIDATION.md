@@ -117,3 +117,10 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - .local/ui-check/settings-desktop.png, laptop-720.png 등은 합성 테스트 결과이며 Git 제외. 설정 화면 육안 확인: 하단 개인정보/4개 값/한 줄 알림·수정 아이콘 배치 정상.
 - 실제 건강 DB/사진을 읽거나 수정하지 않음. 실제 Codex 재시작 후 새 카드, Mac 기본 창, dots 계정 연동, 실제 채팅 첨부·AI·OS 알림 수신은 미검증. 닫힌 앱/클라우드/모바일 알림은 제공하지 않음. claim 후 UI 종료 시 수신 보장 없음. 유지 추정은 개인 감량 처방이 아님.
 - 프로젝트 MVP, HAN-8 In Progress 유지. 자동 시험·설치·푸시를 실제 호스트 수용/제품화 전이 완료로 간주하지 않는다.
+
+
+## 0.1.7 · UX-014 · 2026-10-11
+- 통과: pnpm typecheck/build/test(26개), 실제 stdio MCP25도구/0.1.7 URI·새 carbRecommended/fatRecommended 값, CLI 백업/복원·probe. 권장값342g/83g과 상한404g/96g 구분, 여성 예시·미입력·복원 검증. 개인 DB/사진은 읽거나 수정하지 않음.
+- 실제 React/합성 SQLite + 모사 호스트 bridge: 라운드 카드4개/권장값·문구 확인, 자동 저장 성공 텍스트/유지 설명/호스트 모델/PC 알림 허용 버튼 없음. 반복 행 select 없음, 7요일 평소 숨김, 간격3시간·시간23:59 말풍선 편집/자동 저장·활성/재열기·제거, 매주 월 수 금/일회성/매일 전환과 Escape가 말풍선만 닫는 동작 통과.
+- 느린 저장 중 후속 입력/실패→재시도/닫기 직전 저장·기존 작업 수정/날짜/사진/노트북 960×640~600×480 페이지 fit 회귀. 360px dark 설정·말풍선의 화면 내 배치와 가로 넘침 없음, JS 오류 없음. .local/ui-check/settings-desktop.png/settings-narrow.png 육안 확인. 합성 화면은 Git 제외.
+- 실제 Codex 새 카드/모바일 전달 수용은 미검증. PC OS 알림 경로는 제거, 열린 앱 확인만 유지. 설치·푸시·시험을 실제 호스트 수용이나 제품화 전이 완료로 간주하지 않음. 프로젝트 MVP/HAN-8 In Progress 유지.

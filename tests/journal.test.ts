@@ -1,3 +1,4 @@
+import {nutritionEstimate} from '../src/domain/nutrition.js';
 import {dueOccurrence} from '../src/domain/alarms.js';
 import {alarmSchema} from '../src/contracts/experience.js';
 import {goalProgress} from '../src/domain/goals.js';
@@ -129,4 +130,12 @@ test('recurring and one-time alarms use timezone/DST and durable at-most-once cl
  assert.equal(dueOccurrence({...alarm,kind:'once',startDate:'2026-03-08',time:'02:30'},new Date('2026-03-08T09:00Z'),'America/New_York'),null);
  const fall={...alarm,days:[0],time:'01:30'};assert.equal(dueOccurrence(fall,new Date('2026-11-01T05:45Z'),'America/New_York'),dueOccurrence(fall,new Date('2026-11-01T06:45Z'),'America/New_York'));
  j.setReminders({enabled:false,breakfast:null,lunch:null,dinner:null,alarms:[]},j.reminders().version);assert.equal(s.backup().journal.alarmDeliveries.length,0);
+});
+
+test('recommended carbohydrate/fat are daily target values, separate from historical upper limits',t=>{
+ const {s}=setup(t);const p=s.journal.setPersonalInfo({goalText:'균형 있게 먹기',sex:'male',age:30,heightCm:180,weightKg:80},1);
+ assert.equal(p.carbRecommended,342);assert.equal(p.fatRecommended,83);assert.ok(p.carbRecommended!<p.carbMax!);assert.ok(p.fatRecommended!<p.fatMax!);
+ const female=nutritionEstimate({sex:'female',age:30,heightCm:180,weightKg:80})!;assert.equal(female.calories,2260);assert.equal(female.carbRecommended,311);assert.equal(female.fatRecommended,75);
+ const backup=s.backup();s.restore(backup,()=>{});assert.equal(s.journal.nutrition().carbRecommended,342);
+ assert.equal(nutritionEstimate({sex:null,age:30,heightCm:180,weightKg:80}),null);
 });

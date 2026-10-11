@@ -38,7 +38,20 @@ try{
     const b=await bubble.boundingBox(),t=await helpDialog.locator('.help-highlight').boundingBox();
     assert.ok(b.x>=0&&b.y>=0&&b.x+b.width<=size.width+1&&b.y+b.height<=size.height+1,'bubble fits '+id+JSON.stringify(size));
     const intersects=b.x<t.x+t.width&&b.x+b.width>t.x&&b.y<t.y+t.height&&b.y+b.height>t.y;
-    assert.equal(intersects,false,'bubble must not cover '+id+JSON.stringify(size));
+    if(intersects)await page.screenshot({path:'.local/ui-check/help-collision.png'});
+    assert.equal(intersects,false,'bubble must not cover '+id+JSON.stringify({size,b,t}));
+    const x=await helpDialog.getByRole('button',{name:'도움말 전체 닫기'}).boundingBox();
+    const overlaps=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y;
+    assert.equal(overlaps(x,t),false,'close button must not cover '+id);
+    assert.equal(overlaps(x,b),false,'close button must not cover text '+id);
+    assert.equal(await bubble.evaluate(e=>Array.from(e.querySelectorAll('.help-copy,p,footer')).every(n=>n.scrollHeight<=n.clientHeight+1&&n.getBoundingClientRect().bottom<=e.getBoundingClientRect().bottom+1)),true,'entire text and footer visible without inner scrolling '+id+JSON.stringify(size));
+    const scrollBefore=await page.evaluate(()=>({x:scrollX,y:scrollY}));
+    await page.mouse.move(b.x+b.width/2,b.y+b.height/2);await page.mouse.wheel(0,360);
+    await page.keyboard.press('PageDown');
+    await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+    assert.deepEqual(await page.evaluate(()=>({x:scrollX,y:scrollY})),scrollBefore,'modal blocks background scrolling');
+    assert.deepEqual(await bubble.boundingBox(),b,'wheel/keyboard cannot shake bubble');
+    assert.deepEqual(await helpDialog.locator('.help-highlight').boundingBox(),t,'wheel/keyboard cannot shake highlight');
     if(firstBox)assert.deepEqual(b,firstBox,'multi-page geometry stays fixed');else firstBox=b;
     assert.equal(await bubble.getByLabel('이 기능의 도움말 순서').innerText(),`${n}/${count}`);
     if(size.width===720&&id==='checklist'&&n===1)await page.screenshot({path:'.local/ui-check/help-checklist.png'});
@@ -47,7 +60,7 @@ try{
     await bubble.getByRole('button',{name:/도움말 확인/}).click();
    }
   }
-  await helpDialog.waitFor({state:'detached'});assert.equal(await page.locator('.config-panel').count(),0,'auto-opened settings restored');
+  await helpDialog.waitFor({state:'detached'});assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('help-tour-active')),false,'scroll lock released');assert.equal(await page.locator('.config-panel').count(),0,'auto-opened settings restored');
   assert.equal(await helpButton.evaluate(e=>e===document.activeElement),true);assert.equal(service.snapshot().revision,revisionBeforeTour);
  }
  for(const size of [{width:1000,height:900},{width:720,height:540},{width:600,height:480},{width:360,height:800}])await walkHelp(size);

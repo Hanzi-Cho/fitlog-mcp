@@ -62,3 +62,10 @@ PC960x640/720x540/600x480, 모바일360px에서 터치·스크롤·말풍선·�
 - **Google ARTEMIS + Android Emulator**: 실기기와 에뮬레이터 모두 지원하며 자연어 Android 조작·로그·replay에 적합하다. 모바일 OS와 호스트 앱이 필요한 후속 단계 후보다. PC 플러그인·iOS·기기 간 동기화를 대신 검증하는 도구로 보지 않는다. https://github.com/google/artemis
 
 Fitlog 추천 순서: 기존 코드/실제 stdioMCP → Playwright 반응형 회귀 → Inspector Apps 실제 브리지 → 실제 AI도구/답변 평가 → 대상 Codex/모바일 호스트 수용. 에뮬레이터 결과와 실제 호스트 결과는 항상 분리한다.
+
+
+### E2E-13 · 도움말 휠 안정성·전문·닫기 충돌 (UX-019)
+실제 React/임시 SQLite에서 모든 11설명을 네 화면 크기와 알림20개로 순회한다. wheel+PageDown 전후 문서/강조/말풍선 좌표 동일, 본문·footer scrollHeight≤clientHeight와 말풍선 안 전문 표시, X가 대상·설명을 침범하지 않음, 같은 영역 페이지 geometry 유지, 종료 후 root scroll lock 해제를 검사한다. 코드 scripts/test-journal-ui.mjs. 실제 Codex iframe·터치 스크롤은 별도 수용으로 남긴다.
+
+### E2E-14 · 계정·클라우드 이전·동기화·복구 (CLOUD-001..006, 예정)
+설계 docs/CLOUD-DESIGN.md. 두 합성 계정·두 기기의 동시 수정, 원격 MCP OAuth/만료/철회, 타인 ID/사진 URL 거부, 실제 채팅 첨부→분석→저장→다른 기기 재조회, 오프라인 실패/멱등 재시도, SQLite import 중단·재개·해시 대조, 로컬 캐시 삭제 후 서버 유지, DB+객체 백업 복구, 계정 삭제와 보관 만료. 코드 경로/실행 근거는 아직 없음. 신규 클라우드 도입/데이터 이전 확정 후 구현하며 모사 결과로 통과 처리하지 않는다.

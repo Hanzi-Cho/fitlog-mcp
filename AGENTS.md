@@ -64,3 +64,8 @@ Read docs/TESTING.md for numbered scenarios and evidence levels. UI/MCP help mus
 
 ## 단계 자동 전이 · 2026-10-11 최신 사용자 승인
 사용자가 ‘Linear MVP, 제품화 단계로 넘어갔다면 말 안 해도 옮기고, 부족하다면 근거를 제시’하도록 명시했다. 합의된 범위의 MVP/제품화 단계는 기존/현재 승인과 실제 진입·완료 기준이 충족되면 별도 재확인 없이 에이전트가 최신 상태/동시 변경을 읽고 전이·재조회·근거 기록까지 수행한다. 충족되지 않으면 현재 단계, 완료 근거, 핵심 부족 근거, 다음 검증, 후속 범위와 차단 범위를 구분해 보고한다. 문서 작성만으로 보류하거나 이미 받은 전이 승인을 다시 묻지 않는다. 실제 핵심 미검증은 완료로 꾸미지 않는다. 새로운 배포/비용/공유/파괴적 변경 등 합의 범위 밖 영향은 별도 승인 범위를 확인한다.
+
+
+## 0.1.10 / UX-019 · 클라우드 추천 요청
+Read docs/CLOUD-DESIGN.md for the user's cross-device persistence request, current local SQLite/photo storage, numbered cloud requirements, recommendation and unverified scope. The latest request authorizes investigation/design; it does not enable paid infrastructure or migrate personal health data. Do not imply that Codex login supplies Fitlog storage/authentication, or that mobile plugin support follows automatically from remote storage. Preserve existing transition authorization and separate the cloud follow-up from the original MVP gate.
+Help must show full text without an inner scroll view. Keep modal background scrolling locked with stable gutters, reserve same-group geometry, avoid close/target collisions, restore scrolling on exit, and test real browser geometry and wheel behavior (E2E-13).

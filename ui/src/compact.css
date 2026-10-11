@@ -60,10 +60,14 @@ textarea{scrollbar-gutter:stable}
 .help-close{position:absolute;z-index:3;right:16px;top:8px;width:36px;height:36px;min-height:36px;padding:0;border:0;border-radius:50%;font-size:25px;background:light-dark(#fff,#223329);color:inherit}
 .help-spotlight{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;animation:help-enter .24s ease-out both}.help-highlight{fill:none;stroke:light-dark(#287b50,#b7e5c5);stroke-width:2}.help-pointer{fill:none;stroke:light-dark(#287b50,#b7e5c5);stroke-width:2;stroke-linecap:round}
 .help-bubble{position:absolute;z-index:2;box-sizing:border-box;border-radius:12px;background:light-dark(#fff,#223329);padding:14px;box-shadow:0 4px 20px #0002;display:flex;flex-direction:column;gap:10px;min-width:0;animation:help-enter .24s ease-out both}
-.help-bubble p{margin:0;font-size:13px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}.help-bubble strong{display:block;margin-bottom:5px;font-size:14px}.help-copy{min-height:0;overflow:auto;overscroll-behavior:contain;flex:1}.help-bubble footer{display:flex;align-items:center;justify-content:space-between;flex:none;gap:12px;font-size:11px}.help-bubble button,.help-measure-button{min-height:36px;padding:5px 14px;border-radius:18px;color:inherit;background:light-dark(#e9f2ec,#344c3d);border:0;font-size:13px}.help-measure-button{display:flex;align-items:center;box-sizing:border-box}.help-overlay button:focus-visible{outline:2px solid light-dark(#286744,#abd7b9);outline-offset:2px}
+.help-bubble p{margin:0;font-size:13px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}.help-bubble strong{display:block;margin-bottom:5px;font-size:14px}.help-copy{flex:1;overflow:visible}.help-bubble footer{padding:0;display:flex;align-items:center;justify-content:space-between;flex:none;gap:12px;font-size:11px}.help-bubble button,.help-measure-button{min-height:36px;padding:5px 14px;border-radius:18px;color:inherit;background:light-dark(#e9f2ec,#344c3d);border:0;font-size:13px}.help-measure-button{display:flex;align-items:center;box-sizing:border-box}.help-overlay button:focus-visible{outline:2px solid light-dark(#286744,#abd7b9);outline-offset:2px}
 .help-measure{position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:300px}.help-measure .help-bubble{position:relative;animation:none;height:auto}
 .help-bubble.leaving,.help-spotlight.leaving{animation:help-leave .18s ease-in both}.alarm-settings h3{font-size:14px;margin:18px 0 10px}
 @keyframes help-enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@keyframes help-leave{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(3px)}}
 @media(prefers-reduced-motion:reduce){.help-bubble,.help-spotlight,.help-intro,.help-bubble.leaving,.help-spotlight.leaving{animation:none}}
 
 .config-panel .alarm-list{max-height:min(260px,calc(100dvh - 290px))}
+
+/* Keep the reserved root gutter while the modal controls scrolling between steps. */
+html.help-tour-active{overflow:hidden;overscroll-behavior:none;scroll-behavior:auto}
+.help-close{right:auto}

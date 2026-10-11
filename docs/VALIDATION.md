@@ -140,3 +140,13 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - help-checklist.png/help-profile-narrow.png/help-alarms-compact.png 합성 화면 육안 확인. dim 배경을 유지하면서 말풍선 fade 전환, 기본240ms enter/180ms leave, 모션 감소 즉시 처리. 강조는 실제 요소 주변이며 대상은 가리지 않음. 좁고 내용이 긴 영역에서는 설명 내부만 스크롤.
 - 단계 자동 전이 사용자 승인 확보: 기준 충족 시 재확인 없이 전이·재조회. 현재 프로젝트 MVP/HAN-8 In Progress 유지 사유는 최신 실제 호스트 핵심 흐름 미검증. 사용자 UI 피드백/과거 probe 저장은 근거로 인정하되 최신 첨부·인식·저장·신규 채팅을 대신하지 않는다. 현재 대화 callable Fitlog 메타데이터는 초기11도구이며 이번 격리 MCP시험26도구와 다름.
 - 제품화 전이 전 확인: 최신 실제 호스트 신규 채팅에서 목표/기록 저장→UI 최신화→새 조회 일치, 실제 첨부 bytes→AI분석→저장→사진/분석 재조회 일치. UI사용감·API·모사·실제호스트를 분리. 미지원 모바일/백그라운드 전달·카메라 자동수집·RBAC·기기 동기화는 후속 범위이며 현 MVP에 소급 필수화하지 않음.
+
+
+## 0.1.10 · UX-019 / E2E-13 · 2026-10-11
+- 사용자 실제 피드백: 기존 도움말 UI가 매우 마음에 듦. 스크롤 떨림·긴 말풍선 내부 스크롤·설정 설명과 X 겹침 결함을 보고하여 수정함. 긍정 피드백은 사용감 수용 근거이며 다른 핵심 흐름의 수용을 대신하지 않는다.
+- 통과: pnpm typecheck/build/test. 26개 도메인·실제 임시 SQLite 시험, 실제 stdio MCP26도구/0.1.10 URI·도움말, CRUD/충돌/재시작·백업/복원·probe. 개인 DB/사진 미접근·변환 없음.
+- 통과: node --import tsx scripts/test-compact-ui.mjs. 실제 React + 합성 SQLite + 모사 bridge/AI에서 11개 설명을 1000×900/720×540/600×480/360×800 및 알림20개 작은 창으로 순회. wheel+PageDown 전후 root/대상/말풍선 좌표 동일, 본문/확인 버튼 전문·내부 스크롤 없음, X/대상/말풍선 비겹침, 같은 영역 다중 페이지 크기/위치 고정, 종료 후 scroll lock 해제·포커스/설정 복원·reduced motion·데이터 무변경. 기존 작업/프로필/알림 편집·달력·사진·노트북 fit 회귀 통과, JS 오류 없음.
+- 첫 수정의 알림20개 600×480 회귀는 실패했다. 실제 bbox/screenshot으로 전역 footer 여백과 공간 부족을 확인하고 상단 여백 활용·footer padding 제거·같은 뜻의 짧은 알림 설명으로 수정한 뒤 전체 회귀 통과. 최종 합성 화면 .local/ui-check/help-alarms-compact.png 육안 확인. 테스트 산출물은 Git 제외.
+- 설치: Fitlog0.1.10 prepare-plugin/add 완료. source/cache plugin.json·compatibility manifest·.mcp.json·아이콘 해시 일치. 실제 Codex 기존 카드/프로세스의 자동 교체를 주장하지 않는다. 실제 터치 기기·Codex iframe 사용감은 별도 수용.
+- 클라우드: docs/CLOUD-DESIGN.md CLOUD-001..006와 E2E-14, Linear HAN-9 Backlog에 조사/추천/미결정/수용 기준 기록. 공식 자료상 ChatGPT 상용 로그인 제한 시험·Supabase private/RLS·DB 백업의 사진 원본 제외 확인. 새 서비스·과금·실제 데이터 이전·클라우드 테스트는 실행하지 않았다.
+- 상태: 프로젝트 MVP/HAN-8 In Progress 유지. 현 채팅 Fitlog callable metadata는 초기11도구, 격리 테스트26도구와 다름. 최신 실제 신규 채팅에서 저장→UI 최신화→재조회 및 사진 첨부 bytes→인식→저장→재조회가 남은 핵심 근거다. 전이 승인은 이미 확보되어 재확인 대기가 아니며 클라우드 신설 범위를 기존 로컬 MVP 차단으로 소급하지 않는다.

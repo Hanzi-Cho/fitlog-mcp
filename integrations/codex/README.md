@@ -101,3 +101,7 @@ package/MCP/bridge/UI 리소스 ui://fitlog/dashboard/v0.1.6.html 버전을 통�
 
 ## 0.1.9
 앵커 순차 도움말·첫 방문 안내·알림 상시 펼침. MCP26도구, ui://fitlog/dashboard/v0.1.9.html. build → prepare-plugin → plugin add → 캐시 재조회. 기존 열린 카드 교체와 실제 Codex 새 카드 수용은 구분한다.
+
+
+## 0.1.10
+도움말 배경 스크롤 고정·전문 표시·X 충돌 회피. MCP26도구, ui://fitlog/dashboard/v0.1.10.html. 기존 카드/현재 세션의 자동 교체를 보장하지 않으며 새 리소스 수용을 확인한다. 저장소는 기존 `%LOCALAPPDATA%/FitlogMcp/fitlog.sqlite`; Codex 계정 클라우드 저장은 미구현. 계획은 docs/CLOUD-DESIGN.md.

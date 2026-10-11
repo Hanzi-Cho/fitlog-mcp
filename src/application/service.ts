@@ -5,6 +5,7 @@ import { activityInput, activitySchema, profileInput, profileSchema, reminderInp
 import { FitlogError } from '../contracts/errors.js';
 import { localToday, shiftDate } from '../domain/dates.js';
 import { progress } from '../domain/progress.js';
+import { goalProgress, checkedRecordDates } from '../domain/goals.js';
 import { z } from 'zod';
 import { FitlogRepository } from '../infrastructure/repository.js';
 
@@ -68,9 +69,11 @@ export class FitlogService {
       const todayChecklist=[{id:'workout',label:'운동 기록',done:todays.some(r=>r.type==='workout')},...(['breakfast','lunch','dinner'] as const).map((id,i)=>({id,label:['아침 기록','점심 기록','저녁 기록'][i]!,done:todays.some(r=>r.type==='meal'&&r.mealType===id)}))];
       const checks=this.journal.checks(today);
       const checklist=todayChecklist.map(t=>{const c=checks.find(c=>c.slot===t.id);return {...t,status:c?.status??'unwritten',occurrence:c?.occurrence??(t.done?'completed':'unknown'),version:c?.version??0,note:c?.note??''};});
-      return { schemaVersion: 1, revision: Number(this.setting('revision')), profile, today, todayChecklist:checklist, progress: progress([...records,...this.journal.photoDays()], today, type), recent: this.list({ type }), reminder: this.reminderRequest() }; },false);
+      const allChecks=this.journal.allChecks();
+      const visibleChecks=type==='all'?allChecks:allChecks.filter(c=>type==='workout'?c.slot==='workout':c.slot!=='workout');
+      return { schemaVersion: 1, revision: Number(this.setting('revision')), profile, today, todayChecklist:checklist, goals:goalProgress(allChecks,today), progress: progress([...records,...this.journal.photoDays()], today, type,checkedRecordDates(visibleChecks,today)), recent: this.list({ type }), reminder: this.reminderRequest() }; },false);
   }
-  review(days: 7 | 30) { const today = this.today(); const from = shiftDate(today, -(days - 1)); const records = this.all().filter(r => r.localDate >= from && r.localDate <= today); const p = progress([...records,...this.journal.photoDays().filter(p=>p.localDate>=from&&p.localDate<=today)], today); return { journals:this.journal.review(from,today), from, to:today, timezone:this.getProfile().timezone, recordedDays:p.recordedDays, missingDays:days-p.recordedDays, workouts:records.filter(r=>r.type==='workout').length, meals:records.filter(r=>r.type==='meal').length, records:records.slice(0,200), truncated:records.length>200, guidance:'이 기간의 실제 기록만 근거로 요약하세요. 사진 분석값은 추정치이며 사용자 체크와 구분하세요. 사진 없는 음식의 칼로리·건강 효과·미확인 목표 달성 여부를 생성하지 마세요.' }; }
+  review(days: 7 | 30) { const today = this.today(); const from = shiftDate(today, -(days - 1)); const records = this.all().filter(r => r.localDate >= from && r.localDate <= today); const p = progress([...records,...this.journal.photoDays().filter(p=>p.localDate>=from&&p.localDate<=today)], today, 'all', checkedRecordDates(this.journal.allChecks().filter(c=>c.localDate>=from&&c.localDate<=today),today)); return { journals:this.journal.review(from,today), from, to:today, timezone:this.getProfile().timezone, recordedDays:p.recordedDays, missingDays:days-p.recordedDays, workouts:records.filter(r=>r.type==='workout').length, meals:records.filter(r=>r.type==='meal').length, records:records.slice(0,200), truncated:records.length>200, guidance:'이 기간의 실제 기록만 근거로 요약하세요. 사진 분석값은 추정치이며 사용자 체크와 구분하세요. 사진 없는 음식의 칼로리·건강 효과·미확인 목표 달성 여부를 생성하지 마세요.' }; }
   backup() { return this.transaction(() => ({ schemaVersion:1 as const, exportedAt:this.now().toISOString(), profile:this.getProfile(), reminder:this.getReminder(), activities:this.all(), idempotency:this.repository.allIdempotency(), journal:this.journal.backup() })); }
   validateBackup(raw: unknown) { const data = backupSchema.parse(raw); this.journal.validateBackup(data.journal); if(new Set(data.activities.map(a=>a.id)).size!==data.activities.length || new Set(data.idempotency.map(a=>a.key)).size!==data.idempotency.length) throw new FitlogError('VALIDATION_ERROR','백업에 중복 ID 또는 요청 키가 있습니다.'); if(data.activities.some(a=>a.localDate>localToday(a.timezone,this.now()))) throw new FitlogError('VALIDATION_ERROR','백업에 미래 기록이 있습니다.'); return data; }
   restore(raw: unknown, beforeReplace: (snapshot: ReturnType<FitlogService['backup']>) => void) {

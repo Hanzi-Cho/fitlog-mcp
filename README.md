@@ -4,6 +4,9 @@ Codex 내부에서 운동·식단을 기록하고 실천 이력을 확인하는 
 
 **현재: MVP 코드와 개인용 설치 완료. 실제 호스트 최종 인수 및 클라우드 알림 등록 대기.** 완료/미검증 범위는 [검증 기록](docs/VALIDATION.md)을 확인하세요.
 
+- [기능별 UX 요구사항·수용 기준](docs/requirements/UX.md)
+- [Linear 프로젝트·단계 전이·현재 구성](docs/PROJECT.md)
+- [Changelog](CHANGELOG.md)
 - [승인 설계](docs/DESIGN.md)
 - [dots·알림 요구사항](docs/REMINDERS.md)
 - [Codex 설치](integrations/codex/README.md)

@@ -17,7 +17,8 @@ export class Journal {
  private bump(){this.db.prepare("UPDATE settings SET json=CAST(CAST(json AS INTEGER)+1 AS TEXT) WHERE key='revision'").run();}
  private write<T>(fn:()=>T):T{this.db.exec('BEGIN IMMEDIATE');try{const v=fn();this.bump();this.db.exec('COMMIT');return v;}catch(e){this.db.exec('ROLLBACK');throw e;}}
  private date(date:string){dateSchema.parse(date);if(date>this.today())throw new FitlogError('VALIDATION_ERROR','미래 날짜는 저장할 수 없습니다.');}
- checks(date:string):Check[]{return this.rows('check').map(r=>checkSchema.parse(r)).filter(r=>r.localDate===date);}
+ allChecks():Check[]{return this.rows('check').map(r=>checkSchema.parse(r));}
+ checks(date:string):Check[]{return this.allChecks().filter(r=>r.localDate===date);}
  setCheck(raw:unknown,expectedVersion:number){const input=checkInput.parse(raw);this.date(input.localDate);z.number().int().min(0).parse(expectedVersion);return this.write(()=>{const id=`${input.localDate}:${input.slot}`,old=this.get('check',id) as Check|undefined;if((old?.version??0)!==expectedVersion)throw new FitlogError('CONFLICT','체크가 변경됐습니다. 새로고침 후 다시 선택하세요.');const next={...input,version:expectedVersion+1};this.put('check',id,next);return next;});}
  reminders(){return checkReminderSchema.parse(this.get('reminders','profile'));}
  setReminders(raw:unknown,expectedVersion:number){const input=checkReminderInput.parse(raw);return this.write(()=>{if(this.reminders().version!==expectedVersion)throw new FitlogError('CONFLICT','확인 시각이 변경됐습니다. 새로고침하세요.');const next={...input,version:expectedVersion+1};this.put('reminders','profile',next);return next;});}

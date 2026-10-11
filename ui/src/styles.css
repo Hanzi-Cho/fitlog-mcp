@@ -5,3 +5,21 @@
 @media(max-width:650px){.journal{padding:12px}.journal-checks{grid-template-columns:repeat(2,minmax(0,1fr))}.journal-columns{grid-template-columns:1fr}.imagebook-frame{height:220px}.imagebook-frame img{max-height:220px}}
 
 .journal-columns>section{min-width:0}.journal .actions{flex-wrap:wrap}.imagebook-frame{min-width:0;width:100%;overflow:hidden}.imagebook-frame img{min-width:0;max-width:100%}.journal fieldset{min-inline-size:0}.journal input,.journal textarea{max-width:100%;min-width:0}.journal-reminders form{display:grid;gap:12px;padding:16px;border:1px solid #8884;border-radius:12px}.journal-reminders label{display:flex;align-items:center;gap:8px}.journal-reminders input[type=checkbox]{min-height:auto}
+
+/* UX-001/004/006: content defines the area; controls carry their own affordance. */
+[hidden]{display:none!important}
+.journal{border:0;border-radius:0;padding:20px 0;background:none}
+.activity{border:0;border-radius:0;padding:20px 0}
+.imagebook-frame{display:flex;justify-content:center;align-items:center;width:fit-content;max-width:100%;height:auto;min-height:0;margin:12px auto 0;padding:0;border:0;border-radius:0;background:none;overflow:hidden}
+.imagebook-frame img{display:block;width:auto;height:auto;max-height:320px;max-width:100%;object-fit:contain}
+.imagebook-nav{font-size:12px}.imagebook-nav button{border:0}
+.upload-button{display:inline-flex;align-items:center;position:relative;padding:8px;border:0;font-size:12px}
+.upload-button input{position:absolute;inset:0;opacity:0;width:100%;height:100%;max-width:none;cursor:pointer}
+.upload-button:focus-within{outline:2px solid #57a780;outline-offset:2px}
+.imagebook details summary{cursor:pointer;font-size:12px;margin-top:12px}
+.level-0{background:light-dark(#edf1ed,#28362d)!important}
+.level-1{background:light-dark(#c6e5cd,#365b40)!important;color:inherit}
+.level-2{background:light-dark(#8acb9c,#427b52)!important;color:light-dark(#183b25,#edf4ef)}
+.level-3{background:light-dark(#4b9d68,#54a66d)!important;color:light-dark(#fff,#102919)}
+.level-4{background:light-dark(#216e39,#80d995)!important;color:light-dark(#fff,#102919)}
+@media(max-width:650px){.journal{padding:12px 0}.imagebook-frame{height:auto}.imagebook-frame img{max-height:260px}}

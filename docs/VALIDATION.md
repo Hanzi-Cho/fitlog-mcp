@@ -68,3 +68,12 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - Pre-commit verification: pnpm typecheck, pnpm build and pnpm test passed again (15/15 domain/storage tests, actual stdio MCP, backup CLI and probe regression).
 - Git candidates were reviewed: source/docs/tests and dependency metadata only. DBs, user photos/records, backups, secrets, generated local manifests and build/dependency artifacts are excluded by .gitignore. Credential-pattern scan found no matching candidate files.
 - Push preparation does not assert actual host AI/camera/folder/notification acceptance. Remote delivery is verified separately by comparing commit IDs after push.
+
+## HAN-8 PC UX and documentation / 2026-10-11
+
+- Requirements: docs/requirements/UX.md (UX-001..006, DOC-001/002), CHANGELOG.md and docs/PROJECT.md. Linear HAN-8 In Progress; project MVP.
+- Passed: pnpm typecheck/build/test (18/18), actual stdio MCP, backup CLI and probe. Goal heatmap checks cover unique affirmative goals, X/unwritten/plan, record/photo independence, filter independence, variable N/zero/future, check-only streaks and review counts.
+- Passed: node --import tsx scripts/test-journal-ui.mjs using actual React and isolated synthetic SQLite with a mocked host/AI bridge. PC equal-width checklist/metrics, one row per check, photo upload/new selection/edit/date navigation/carousel/reload, goal intensity 0..4, frame=image dimensions, no automatic overlay/host explanation, reminder settings, 360px dark overflow and browser errors checked.
+- Inspected synthetic screenshots .local/ui-check/ux-desktop.png and ux-narrow.png. Screenshots/fixture data are not real user photos or health records.
+- Minimal view retains reminder monitoring while mounted and only shows actionable due cards; advanced settings remain in detail view.
+- Actual Codex UI/reconnection, natural-language tool routing, AI image quality, camera/folder permissions, OS/cloud/mobile delivery remain unverified. Existing MCP process must reconnect to load new handlers/resources. No stage transition or release claimed.

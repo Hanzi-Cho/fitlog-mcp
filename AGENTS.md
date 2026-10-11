@@ -26,3 +26,11 @@ Approved design: docs/DESIGN.md (2026-10-10 user approval).
 - Closed-app camera/library access, background/cloud/mobile delivery and automatic sidebar pinning/ordering remain unverified or unsupported pending capability checks. Keep them explicitly limited or agree follow-up scope; do not promise them from metadata or mocks.
 - Productization→Release/Analytics requires an evidenced release candidate, resolved blocking defects, agreed nonblocking deferrals, and approved release/operations/measurement scope. Record before→after stage, evidence, approval source and next actions in Linear; read before writes and verify afterward. Stage movement does not prove deployment.
 <!-- productization-flow:end -->
+
+## UX requirements and project documentation / HAN-8
+
+- Product purpose: minimal effort and attention for daily self-management. Prefer direct checks/photos and one-screen status over extra chat, pages and technical host explanations. Keep actionable errors and necessary data-transmission/estimate/deletion information.
+- Read docs/requirements/UX.md for stable numbered requirements and code/acceptance mappings; docs/PROJECT.md for Linear links, current phase, implementation/validation/host-acceptance boundaries and transition tasks; CHANGELOG.md for changes. Update these with Linear when requirements change.
+- PC checks occupy the left half as one item per row in a bounded scroll area; streaks and today's ring remain visible on the right. Selected-date imagebook below must fit the actual image without an empty decorative frame.
+- Heatmap intensity is affirmative goals K/N, not presence of records/photos. N is currently four fixed slots; arbitrary goal editing and historical goal-set versioning need separate scope. Explicit X/unwritten/planned do not add attainment.
+- Short chat facts use existing MCP CRUD/check tools; preserve explicit goal judgments and avoid repeated clarification. Natural-language routing and actual host acceptance require real evidence, not just tool descriptions.

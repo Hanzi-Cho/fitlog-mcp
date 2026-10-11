@@ -15,7 +15,7 @@ codex plugin list --json
 
 생성기는 실행 중인 Node와 이 저장소의 dist/main.mjs 절대 경로를 개인용 mcp.json에 기록한다. .local/은 Git에서 제외된다. 현재 체크아웃을 참조하므로 폴더/Node를 옮기면 새로 생성 및 설치해야 한다. 다른 PC에서는 그 PC에서 생성한다.
 
-현재 PC에는 fitlog@fitlog-personal 0.1.0 설치 및 enabled=true까지 확인했다. 중복 등록하지 말고 앱을 재시작한 후 “Fitlog 대시보드를 열어줘”라고 요청한다. open_dashboard가 실제 버전이며 open_fitlog_probe는 합성 시험용이다.
+최초 fitlog@fitlog-personal 0.1.0 설치 이후 2026-10-11에 0.1.2로 갱신했고 installed=true/enabled=true를 재조회했다. 중복 등록하지 말고 앱을 재시작한 후 “Fitlog 대시보드를 열어줘”라고 요청한다. open_dashboard가 실제 버전이며 open_fitlog_probe는 합성 시험용이다.
 
 ## 실제 호스트 인수
 
@@ -59,3 +59,15 @@ codex plugin remove fitlog@fitlog-personal
 ### 본 서버 연결을 찾을 수 없을 때
 
 2026-10-10 표시 실패 신고 후 이 PC에 본 서버 `fitlog`를 명시적으로 등록했다. `codex mcp get fitlog --json`의 경로는 이 저장소 `dist/main.mjs`이며 enabled=true다. 기존 `fitlog-probe`는 시험 화면만 연다. 패키지 갱신(0.1.1)과 본 서버 직접 등록 후에는 앱을 완전히 종료·다시 실행해 본 서버 도구 `open_dashboard`가 로드됐는지 먼저 확인한다. 메뉴 자동 등록·PiP는 그 다음 단계이며 도구 발견만으로 완료로 표시하지 않는다. 향후 같은 이름의 플러그인 서버가 발견되면 중복 실행 여부를 먼저 확인한다.
+
+## 설치 최신화 · 2026-10-11 · 0.1.2
+
+소스 수정/빌드/GitHub 푸시와 설치본/실행 세션 갱신은 별개다. package.json의 version을 변경하고 생성기가 두 manifest에 같은 버전을 쓰도록 했다. 이번 생산 UI 리소스는 ui://fitlog/dashboard/v0.1.2.html로 구분한다.
+
+1. pnpm typecheck, pnpm build, pnpm test 실행.
+2. node scripts/prepare-plugin.mjs로 현재 버전 패키지 재생성.
+3. codex plugin add fitlog@fitlog-personal --json으로 기존 설치 갱신.
+4. codex plugin list --json에서 Fitlog 버전/installed/enabled, 캐시 manifest 및 MCP 실행 경로를 재조회.
+5. 앱을 완전히 종료하고 다시 실행한 뒤 Fitlog를 새로 연다. 이미 열려 있는 카드나 진행 중 채팅의 이전 MCP 도구 목록은 최신 UI/서버라는 근거가 아니다. 새 생산 서버 도구 20개와 버전 UI 리소스를 확인한다.
+
+이 과정은 건강 DB/사진/백업을 수정하지 않는다. 자동 업데이트 완료는 설치 재조회와 실제 재시작/수용을 각각 확인한 뒤 기록한다. 공식 안내: https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually

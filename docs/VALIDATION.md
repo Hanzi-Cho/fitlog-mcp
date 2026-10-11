@@ -77,3 +77,11 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - Inspected synthetic screenshots .local/ui-check/ux-desktop.png and ux-narrow.png. Screenshots/fixture data are not real user photos or health records.
 - Minimal view retains reminder monitoring while mounted and only shows actionable due cards; advanced settings remain in detail view.
 - Actual Codex UI/reconnection, natural-language tool routing, AI image quality, camera/folder permissions, OS/cloud/mobile delivery remain unverified. Existing MCP process must reconnect to load new handlers/resources. No stage transition or release claimed.
+
+## Installed plugin refresh / 2026-10-11 / 0.1.2
+
+- User reported stale plugin UI and explicitly requested updating the installed Codex plugin. Before refresh: installed version 0.1.1, this chat exposed old 11-tool metadata, and multiple Fitlog main.mjs processes predated the latest build. Source/GitHub delivery did not establish runtime refresh.
+- Set package, MCP/bridge and generated portable/compatibility manifests to 0.1.2; generation reads package.json version. UI resource changed to ui://fitlog/dashboard/v0.1.2.html.
+- pnpm typecheck/build/test passed (18/18, real stdio MCP discovery/CRUD/restart, backup/probe). Fresh synthetic MCP client successfully read the new versioned resource and found 20 tools.
+- Executed node scripts/prepare-plugin.mjs and codex plugin add fitlog@fitlog-personal --json. Read-back installed=true/enabled=true/version=0.1.2. Cache path ~/.codex/plugins/cache/fitlog-personal/fitlog/0.1.2; source/cache manifest SHA-256 matched, both manifest versions matched and .mcp.json pointed to this repo dist/main.mjs. Direct MCP registration also points to the same production server.
+- Health DB/photo/backup contents were not read or modified. App-wide restart was not forced during the active chat. Fully quit/reopen Codex and open a fresh Fitlog card to reload the running MCP/tool registry/UI; actual post-restart host acceptance is pending. Installing/updating the cache alone is not proof that an already-open card refreshed.

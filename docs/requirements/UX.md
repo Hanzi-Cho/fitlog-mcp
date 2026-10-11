@@ -108,3 +108,14 @@
 7. 반복 요약이나 시간 클릭 시 같은 AlarmRow의 InlinePopover 말풍선을 연다. 반복 말풍선 안에서 매일/매주/한 번/간격·요일·날짜·단위를 변경하고 시간 말풍선에서 시각을 변경한다. 자동 저장하며 완료·바깥 클릭·Escape로 닫는다. Escape는 말풍선만 닫고 설정은 유지한다. top-layer로 목록에 잘리지 않으며 콘텐츠 높이·창 크기/스크롤에 맞춰 버튼 근처에 배치한다. 별도 편집 화면/모달 진입 없이 처리한다.
 8. PC 알림 허용 버튼과 Notification API 호출을 제거한다. 열린 앱 확인 카드는 유지, 휴대폰/배경 전달은 후속으로 분리한다. ‘앱을 열어두면 알려드려요’처럼 실제 지원 범위를 생활 언어로 표시한다.
 9. 코드: ConfigPanel.tsx/AlarmRow.tsx/InlinePopover.tsx/ReminderPanel.tsx/useAutosave.ts/compact.css, domain/nutrition.ts/contracts/experience.ts/application/journal.ts. 수용: 권장량/상한 분리·구버전/복원·MCP, 카드 테두리와 불필요 문구/PC 버튼 없음, 모든 반복 방식/시간 말풍선 편집·재조회·Escape/좁은 창·자동 저장 실패/후속 입력 회귀.
+
+
+## UX-015 · 도움말과 정확한 채팅 지원 · 2026-10-11
+1. 상단 도움말 ?는 config 왼쪽에 둔다. 기존 화면을 38% 검정 배경으로 어둡게 하고 모달 위에 기능별 설명과 확인 버튼을 둔다. 별도 페이지나 기록 입력은 만들지 않는다.
+2. 각 확인은 해당 설명만 제거한다. 마지막 설명 확인 시 닫히며 재열기 시 전체 설명이 돌아온다. 우측 상단 X/ESC로 전체 종료, 닫기 후 원래 버튼으로 포커스를 돌린다. 배경 조작은 모달 동안 차단한다.
+3. 오늘 할 일, 달성과 연속 기록, 달력, 식사 사진, 프로필, 알림, 채팅, 이용 범위를 설명한다. 좁은 화면은 공통 ScrollArea로 내용만 스크롤하고 X는 고정한다. 기록·설정은 변경하지 않는다.
+4. UI와 get_help MCP는 src/domain/help.ts를 공유한다. 지원/호스트 의존/예정 기능을 구조화하고 사진 형식/4MB 제한을 안내한다. 사진 인식·영구 기억·자동 동기화·백그라운드 알림·사용자별 권한이 이미 가능하다고 주장하지 않는다.
+5. 구현: ui/src/HelpOverlay.tsx, compact.tsx/compact.css, src/domain/help.ts, src/mcp/main.ts. 검증: scripts/test-mcp.mjs 및 scripts/test-journal-ui.mjs. 제품화 4축과 시나리오는 ../PROJECT.md, ../TESTING.md 참조.
+
+## UX-016 · 플러그인 아이콘 · 2026-10-11
+사용자 제공 Fitlog JPG를 assets/fitlog-icon.jpg로 보존하고 패키지 assets에 복사한다. portable/compatibility manifest의 composerIcon·logo·logoDark에 연결한다. JPG 원본이며 벡터 변환/그림 변경 없음. 설치 캐시의 자산 해시를 원본과 비교하고 실제 호스트 노출은 별도 확인한다. 공식 필드: https://developers.openai.com/plugins/build/plugins .

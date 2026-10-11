@@ -124,3 +124,11 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 - 실제 React/합성 SQLite + 모사 호스트 bridge: 라운드 카드4개/권장값·문구 확인, 자동 저장 성공 텍스트/유지 설명/호스트 모델/PC 알림 허용 버튼 없음. 반복 행 select 없음, 7요일 평소 숨김, 간격3시간·시간23:59 말풍선 편집/자동 저장·활성/재열기·제거, 매주 월 수 금/일회성/매일 전환과 Escape가 말풍선만 닫는 동작 통과.
 - 느린 저장 중 후속 입력/실패→재시도/닫기 직전 저장·기존 작업 수정/날짜/사진/노트북 960×640~600×480 페이지 fit 회귀. 360px dark 설정·말풍선의 화면 내 배치와 가로 넘침 없음, JS 오류 없음. .local/ui-check/settings-desktop.png/settings-narrow.png 육안 확인. 합성 화면은 Git 제외.
 - 실제 Codex 새 카드/모바일 전달 수용은 미검증. PC OS 알림 경로는 제거, 열린 앱 확인만 유지. 설치·푸시·시험을 실제 호스트 수용이나 제품화 전이 완료로 간주하지 않음. 프로젝트 MVP/HAN-8 In Progress 유지.
+
+## 0.1.8 · UX-015/016 · 2026-10-11
+- 통과: pnpm typecheck/build/test(26개 도메인·실제 임시 SQLite 시험), 실제 stdio MCP26도구/0.1.8 리소스·get_help 전체/사진 필터·invalid topic 거부·read-only 메타데이터·journal revision 무변경, 기존 CRUD/재시작·백업/복원·probe. 개인 건강 DB/사진 미접근.
+- 실제 React/임시 SQLite + 모사 host bridge: ?가 config 왼쪽, 기능별8개 설명/어두운 backdrop, 개별 확인 후7개/나머지 유지, X/ESC/재열기8개/마지막 확인 종료, 모달 내부 키보드 포커스/종료 후 버튼 복원, 설정 열린 상태 도움말 ESC가 설정 유지, 도움말 전후 revision 일치. 720x540·360x800 내용 스크롤과 X 화면 내 배치, 가로 넘침 없음. 기존 프로필/알림/작업/사진/달력/노트북 회귀와 JS 오류 없음 통과.
+- 합성 도움말 화면 .local/ui-check/help-desktop.png/help-narrow.png 육안 확인. 사진/AI 인식은 fixture로 대체하므로 실제 인식 수용이 아님. 스크린샷은 Git 제외.
+- 사용자 첨부 JPG를 변경 없이 자산으로 복사, 원본·저장소·패키지·설치 캐시 SHA256 일치 확인. portable/compatibility manifest의 composerIcon/logo/logoDark 경로와 소스/캐시 manifest 해시 일치. prepare-plugin 문법 검사 통과.
+- Fitlog0.1.8 installed=true/enabled=true 재조회. 실제 Codex 새 카드의 도움말/아이콘 표시·AI 채팅 라우팅·첨부 bytes 접근·실제 이미지 인식·모바일 호스트 수용 미검증. 열린 카드/서버가 자동 교체됐다고 주장하지 않는다. 로그인/RBAC·기기 간 자동 동기화·모바일 백그라운드 전달은 미구현.
+- TESTING.md E2E-01..12에 기대값/코드/근거 계층/미검증·후속을 명시. 추가 도구 Inspector/promptfoo/ARTEMIS는 공식 자료 조사·추천이며 설치/실행하지 않음. Linear 공통/프로젝트 문서와 HAN-8에 제품화4축/결과를 기록 후 재조회. MVP/HAN-8 In Progress 유지.

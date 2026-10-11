@@ -48,3 +48,14 @@ Approved design: docs/DESIGN.md (2026-10-10 user approval).
 
 - 0.1.7 / UX-014: Fitlog is for non-developers. Product copy must use familiar language; remove technical host/model/API terms, redundant save-success text and explanatory clutter. Explain local storage and AI assistance accurately without claiming automatic permanent AI memory. Keep actionable failure/retry information.
 - Use four rounded nutrition cards with recommended carb/fat values distinct from legacy upper limits. Keep calculation assumptions/sources in requirements/UX.md; do not silently repurpose max fields. AlarmRow shows compact recurrence/time summaries; edit through shared anchored InlinePopover, bordered name field and rounded active/inactive button. No leading dropdown or always-visible weekday grid. Remove PC OS notification permission/delivery; mobile delivery remains later work. Preserve quiet autosave, history, stable scroll gutters and explicit actual-host acceptance boundaries.
+
+
+## 제품화 필수 작업 4축 · 2026-10-11 사용자 승인 범위
+1. **사용자 경험**: 사용자가 실제로 다듬는 요구를 번호화하고 UI·상태·접근성·반응형 수용 기준으로 연결한다. 에이전트는 승인된 개선과 회귀 검증을 수행하고 사용자는 실제 사용감을 평가한다.
+2. **권한**: 개발자의 공식 UI/기능 수정·배포 권한과 이용자의 자기 기록·작업·프로필·알림 관리 범위를 구분한다. 로컬/서버/클라우드 여부와 무관하게 데이터 소유·읽기/쓰기/삭제·기기/파일 접근·AI 전송 권한을 명시한다. UI 숨김을 권한 검증으로 보지 않는다. 현재 Fitlog는 단일 로컬 사용자이며 로그인/RBAC는 미구현이다. 로컬 컴퓨터 소유자의 파일 수정을 막는다고 주장하지 않는다. 다중 사용자/공유가 적용되기 전 도구·데이터 계층의 소유권 검증, 거부/철회·타인 ID 접근 음성 테스트가 필요하다. 권한 설계/구현은 후속 범위이며 새 인증/클라우드 도입을 자동 승인하지 않는다.
+3. **도움말**: 작업을 방해하지 않는 화면 도움말과 채팅/MCP 사용법을 제공한다. 공통 원본에서 지원·호스트 의존·예정 기능을 구분하고 오류·제한·권한도 안내한다. 설명의 정확성·발견성·키보드 조작을 검증한다.
+4. **테스트 코드와 시나리오**: 요구 ID → 사전 조건/입력 → 기대 도구 호출·저장 상태·출력·화면 → 자동 테스트 경로 → 실행 근거/미검증을 연결한다. 단위·DB·실제 MCP 통합·앱 UI·실제 AI 채팅·실제 대상 호스트를 구분한다. PC/모바일, 상태 전이/최신화, 첨부·인식·저장·재조회, 권한 거부, 오류/충돌/재시도/복구를 포함한다. 미지원 흐름은 실패를 감추지 말고 명확한 제한 안내를 수용 기준으로 둔다.
+
+전이 운영: 구체화에서 위 4축의 범위·담당·수용 기준을 정하고, MVP에서 핵심 코드/테스트/지원 한계를 만든다. 제품화에서는 실패 시나리오·실제 통합·회귀 코드와 근거를 보강한다. 출시/Analytics 전에는 핵심 시나리오 실제 대상 환경 통과와 권한/데이터 유실/핵심 흐름 차단 해소를 확인한다. 각 축에 적용 여부·담당·환경/버전·통과/실패/미검증·근거·이월 결정을 기록한다. 문서 작성·에뮬레이터 통과만으로 Linear 상태를 이동하지 않는다.
+
+Read docs/TESTING.md for numbered scenarios and evidence levels. UI/MCP help must share src/domain/help.ts. Update tests and requirements with meaningful behavior changes; do not invent host/AI/mobile acceptance from mocks. UX-015 supersedes the old title+config-only header: put help immediately left of config.

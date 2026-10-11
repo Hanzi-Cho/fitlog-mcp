@@ -19,6 +19,23 @@ try{
  service.journal.setCheck({localDate:'2026-10-10',slot:'workout',controlType:'count',label:'스쿼트',count:50,target:100,status:'no',occurrence:'completed'},0);
  browser=await chromium.launch({headless:true,channel:'msedge'});const page=await browser.newPage({viewport:{width:1000,height:900},timezoneId:'Asia/Seoul'});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:'+server.address().port);await page.getByRole('heading',{name:'오늘의 체크리스트',exact:true}).waitFor();
+
+ // Help controls, independent dismissal, modal focus, settings preservation and no writes.
+ const helpRevision=service.snapshot().revision;
+ const helpButton=page.getByRole('button',{name:'도움말',exact:true});
+ const hb=await helpButton.boundingBox(),cb=await page.getByRole('button',{name:'프로필 및 설정',exact:true}).boundingBox();assert.ok(hb.x+hb.width<=cb.x);
+ await helpButton.click();const helpDialog=page.getByRole('dialog',{name:'Fitlog 도움말',exact:true});await helpDialog.waitFor();assert.equal(await helpDialog.locator('.help-card').count(),8);
+ assert.notEqual(await helpDialog.evaluate(e=>getComputedStyle(e,'::backdrop').backgroundColor),'rgba(0, 0, 0, 0)');
+ await helpDialog.getByRole('button',{name:'오늘 할 일 도움말 확인',exact:true}).click();assert.equal(await helpDialog.locator('.help-card').count(),7);assert.equal(await helpDialog.locator('[data-help-topic=checklist]').count(),0);
+ await page.keyboard.press('Tab');assert.equal(await helpDialog.evaluate(e=>e.contains(document.activeElement)),true);
+ await helpDialog.getByRole('button',{name:'도움말 전체 닫기',exact:true}).click();assert.equal(await helpDialog.count(),0);assert.equal(await helpButton.evaluate(e=>e===document.activeElement),true);
+ await helpButton.click();assert.equal(await helpDialog.locator('.help-card').count(),8);await page.keyboard.press('Escape');assert.equal(await helpDialog.count(),0);
+ await page.getByRole('button',{name:'프로필 및 설정',exact:true}).click();await page.getByLabel('나의 목표').waitFor();await helpButton.click();await page.keyboard.press('Escape');assert.equal(await page.locator('.config-panel').count(),1);await page.getByRole('button',{name:'설정 닫기',exact:true}).click();
+ await helpButton.click();await mkdir('.local/ui-check',{recursive:true});await page.screenshot({path:'.local/ui-check/help-desktop.png',fullPage:true});
+ for(const size of [{width:720,height:540},{width:360,height:800}]){await page.setViewportSize(size);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);const x=await helpDialog.getByRole('button',{name:'도움말 전체 닫기'}).boundingBox();assert.ok(x.x>=0&&x.x+x.width<=size.width&&x.y>=0);await helpDialog.locator('.help-scroll').evaluate(e=>e.scrollTop=e.scrollHeight);assert.ok(await helpDialog.getByRole('button',{name:'내 기록과 이용 범위 도움말 확인'}).isVisible());}
+ await page.screenshot({path:'.local/ui-check/help-narrow.png',fullPage:true});
+ while(await helpDialog.count()){await helpDialog.locator('.help-card button').first().click();}
+ assert.equal(service.snapshot().revision,helpRevision,'help does not change records');await page.setViewportSize({width:1000,height:900});
  assert.equal(await page.getByRole('button',{name:/새로고침|상세 보기/}).count(),0);assert.equal(await page.locator('input[type=file]').count(),0);assert.equal(await page.locator('.compact-header time').count(),0);assert.equal(await page.locator('.journal-check select').count(),0);assert.equal(await page.locator('.goal-checkbox').count(),3);
  await page.getByText('아직 사진이 없어요',{exact:true}).waitFor();const emptyBox=await page.locator('.imagebook-placeholder').boundingBox(),emptyText=await page.getByText('아직 사진이 없어요',{exact:true}).boundingBox();assert.ok(Math.abs(emptyBox.x+emptyBox.width/2-emptyText.x-emptyText.width/2)<2);assert.ok(Math.abs(emptyBox.y+emptyBox.height/2-emptyText.y-emptyText.height/2)<2);
  const counter=page.getByLabel('스쿼트 달성 횟수');assert.equal(await counter.inputValue(),'50');await counter.fill('100');await counter.press('Enter');await page.getByRole('img',{name:'오늘 목표 4개 중 1개 준수'}).waitFor();assert.equal(service.journal.checks('2026-10-10')[0].status,'yes');

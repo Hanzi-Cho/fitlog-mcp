@@ -9,11 +9,18 @@ let client;
 async function start(){client=new Client({name:'fitlog-integration',version:'1.0'});await client.connect(new StdioClientTransport({command:process.execPath,args:[resolve('dist/main.mjs')],env:{...process.env,FITLOG_DATA_DIR:dir},stderr:'pipe'}));}
 async function call(name,args={}){return client.callTool({name,arguments:args});}
 try{
- await start();const tools=await client.listTools();assert.equal(tools.tools.length,25);
- assert.equal(tools.tools.find(t=>t.name==='open_dashboard')._meta.ui.resourceUri,'ui://fitlog/dashboard/v0.1.7.html');
+ await start();const tools=await client.listTools();assert.equal(tools.tools.length,26);
+ assert.equal(tools.tools.find(t=>t.name==='open_dashboard')._meta.ui.resourceUri,'ui://fitlog/dashboard/v0.1.8.html');
  assert.equal(tools.tools.find(t=>t.name==='open_dashboard').title,'Fitlog');
  assert.deepEqual(tools.tools.find(t=>t.name==='open_dashboard')._meta['openai/ui'].entrypoints,[{type:'global'},{type:'thread'}]);
- const resource=await client.readResource({uri:'ui://fitlog/dashboard/v0.1.7.html'});assert.deepEqual(resource.contents[0]._meta['openai/ui'].availableDisplayModes,['inline','pip','fullscreen']);assert.equal(resource.contents[0].mimeType,'text/html;profile=mcp-app');assert.ok(resource.contents[0].text.includes('<div id="root"></div><script>'), 'UI resource must contain an executable app root');
+ const resource=await client.readResource({uri:'ui://fitlog/dashboard/v0.1.8.html'});assert.deepEqual(resource.contents[0]._meta['openai/ui'].availableDisplayModes,['inline','pip','fullscreen']);assert.equal(resource.contents[0].mimeType,'text/html;profile=mcp-app');assert.ok(resource.contents[0].text.includes('<div id="root"></div><script>'), 'UI resource must contain an executable app root');
+ const beforeHelp=(await call('open_dashboard')).structuredContent.data.revision;
+ const help=(await call('get_help')).structuredContent.data;
+ assert.equal(help.topics.length,8);assert.ok(help.support.planned.includes('role_authorization'));assert.ok(help.support.requiresHost.includes('image_recognition'));
+ assert.equal(tools.tools.find(t=>t.name==='get_help').annotations.readOnlyHint,true);
+ assert.deepEqual((await call('get_help',{topic:'photos'})).structuredContent.data.topics.map(t=>t.id),['photos']);
+ assert.equal((await call('get_help',{topic:'invented'})).isError,true);
+ assert.equal((await call('open_dashboard')).structuredContent.data.revision,beforeHelp,'help must not mutate user records');
  const args={activity:{type:'meal',localDate:'2020-01-02',title:'합성 점심',mealType:'lunch'},idempotencyKey:'mcp-test-key-001'};
  const created=await call('create_activity',args);assert.equal(created.isError,undefined);const a=created.structuredContent.data.activity;
  assert.equal((await call('create_activity',args)).structuredContent.data.activity.id,a.id);

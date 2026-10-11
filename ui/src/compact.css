@@ -52,3 +52,18 @@ textarea{scrollbar-gutter:stable}
 @media(max-width:560px){.alarm-row{flex-wrap:wrap}.alarm-row .alarm-name{flex-basis:calc(100% - 108px)}.nutrition-summary>div{padding:10px}}
 
 @media(max-width:560px){.alarm-row{display:grid;grid-template-columns:minmax(0,1fr) auto 24px}.alarm-row>.inline-popover:first-child{grid-column:1}.alarm-row>.inline-popover:nth-child(2){grid-column:2/4}.alarm-row .alarm-name{grid-column:1;width:100%;min-width:0}.alarm-row .alarm-toggle{grid-column:2}.alarm-row .alarm-remove{grid-column:3}}
+
+/* Help overlays the current screen; each explanation can be dismissed independently. */
+.compact-header .help-button{margin-left:auto;display:grid;place-items:center;width:36px;min-height:36px;padding:4px;background:transparent;color:inherit}
+.compact-header .config-button{margin-left:0}
+.help-overlay{position:fixed;inset:0;width:100%;max-width:none;height:100%;max-height:none;margin:0;padding:52px 12px 12px;border:0;background:transparent;color:light-dark(#254233,#e0ede4);overflow:hidden;box-sizing:border-box}
+.help-overlay::backdrop{background:rgb(0 0 0 / .38)}
+.help-close{position:absolute;right:16px;top:8px;width:36px;height:36px;min-height:36px;padding:0;border:0;border-radius:50%;font-size:25px;background:light-dark(#fff,#223329);color:inherit}
+.help-scroll{height:100%;max-width:760px;margin:0 auto;overflow:auto;overscroll-behavior:contain;padding:2px 4px 8px}
+.help-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start}
+.help-card{border-radius:12px;background:light-dark(#fff,#223329);padding:14px;box-shadow:0 3px 16px #0002;display:flex;flex-direction:column;gap:10px;min-width:0}
+.help-card p{margin:0;font-size:13px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}
+.help-card strong{display:block;margin-bottom:5px;font-size:14px}
+.help-card button{align-self:end;margin-top:auto;min-height:36px;padding:5px 14px;border-radius:18px;color:inherit;background:light-dark(#e9f2ec,#344c3d);border:0}
+.help-overlay button:focus-visible{outline:2px solid light-dark(#286744,#abd7b9);outline-offset:2px}
+@media(max-width:560px){.help-cards{grid-template-columns:1fr}.help-card{padding:12px}}

@@ -103,3 +103,7 @@ Daily explicit yes/no/unwritten checks and separate occurrence; local imagebook 
 
 설치 확인: prepare-plugin 및 plugin add 이후 installed=true/enabled=true/version=0.1.4, 소스/캐시 manifest 해시 일치. 활성 Codex 앱의 강제 종료는 수행하지 않았으며 새 카드 수용은 미검증.
 
+
+
+## 0.1.5 UX-009 · 노트북 창 밀도
+지표 왼쪽/목록 오른쪽, 최대 폭 760px·상단 32px·행 32px·목록 최대164px, 달력 240px/낮은 창 칸24px, 범례 제거. 사진 비율을 유지하고 창 높이로 축소한다. 실제 React+합성 SQLite/모사 bridge에서 960×640, 800×600, 720×540, 600×480 오늘/과거 화면 페이지 가로·세로 넘침 없음. 세로 사진/피드백3개/16작업/6주 달력·기존 날짜/작업 관리와 360px dark 회귀 통과. 합성720×540 화면 육안 확인. 타입/빌드/22개 시험·stdio MCP22도구/0.1.5리소스·백업/probe 통과. 실제 MacBook 및 Codex 기본 창 실측/새 카드 수용은 미검증. 프로젝트 MVP/HAN-8 In Progress 유지.

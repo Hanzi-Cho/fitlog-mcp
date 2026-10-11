@@ -55,3 +55,7 @@ HAN-8 자동 검증 및 화면 확인 결과를 남기고 실제 호스트에서
 - 코드: compact.tsx/Imagebook.tsx/Checks.tsx/TaskEditor.tsx, experience.ts/journal.ts/service.ts/goals.ts. goalConfig 날짜별 revisions와 버전, 백업 기본값·복원 포함. 실제 개인 DB/사진은 읽거나 수정하지 않음.
 - 통과: pnpm typecheck/build/test(22개), 실제 stdio MCP 22도구/0.1.4 UI·추가/제거/충돌/재시작, 백업 CLI/probe. 실제 React+합성 SQLite/모사 bridge 브라우저: 중앙 위치 실측, 날짜 목록→사진/왕복·재클릭/오늘 지표 유지, count 추가/저장/제거/재조회, 과거 목표/분모 보존, PC/360px dark 넘침·JS 오류 없음. 합성 PC/과거 날짜 화면 육안 확인.
 - 프로젝트 MVP/HAN-8 In Progress 유지. 실제 Codex 새 카드 수용·채팅 첨부/AI·실제 알림 수신은 별도 미검증. 설치 갱신과 열린 앱 세션 수용을 구분한다.
+
+
+## 0.1.5 UX-009 · 노트북 창 밀도
+지표 왼쪽/목록 오른쪽, 최대 폭 760px·상단 32px·행 32px·목록 최대164px, 달력 240px/낮은 창 칸24px, 범례 제거. 사진 비율을 유지하고 창 높이로 축소한다. 실제 React+합성 SQLite/모사 bridge에서 960×640, 800×600, 720×540, 600×480 오늘/과거 화면 페이지 가로·세로 넘침 없음. 세로 사진/피드백3개/16작업/6주 달력·기존 날짜/작업 관리와 360px dark 회귀 통과. 합성720×540 화면 육안 확인. 타입/빌드/22개 시험·stdio MCP22도구/0.1.5리소스·백업/probe 통과. 실제 MacBook 및 Codex 기본 창 실측/새 카드 수용은 미검증. 프로젝트 MVP/HAN-8 In Progress 유지.

@@ -81,3 +81,6 @@ codex plugin remove fitlog@fitlog-personal
 
 ## 0.1.4 · 날짜 기록/작업 관리
 최신 리소스 ui://fitlog/dashboard/v0.1.4.html, MCP 도구 22개(add_goal/remove_goal 포함). prepare-plugin→plugin add→설치/캐시 재조회 순서를 적용한다. Codex 완전 재시작 후 새 카드를 열어 실제 수용을 확인한다. 기존 열린 카드를 최신으로 간주하지 않는다.
+
+## 0.1.5 · 노트북 밀도
+최신 리소스 ui://fitlog/dashboard/v0.1.5.html. 기존 생성/설치 갱신 후 버전·캐시를 재조회한다. 지표 왼쪽/목록 오른쪽과 축소 밀도가 적용된다. 실제 MacBook/Codex 기본 창은 별도 수용 확인이 필요하다.

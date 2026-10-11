@@ -10,10 +10,10 @@ async function start(){client=new Client({name:'fitlog-integration',version:'1.0
 async function call(name,args={}){return client.callTool({name,arguments:args});}
 try{
  await start();const tools=await client.listTools();assert.equal(tools.tools.length,22);
- assert.equal(tools.tools.find(t=>t.name==='open_dashboard')._meta.ui.resourceUri,'ui://fitlog/dashboard/v0.1.4.html');
+ assert.equal(tools.tools.find(t=>t.name==='open_dashboard')._meta.ui.resourceUri,'ui://fitlog/dashboard/v0.1.5.html');
  assert.equal(tools.tools.find(t=>t.name==='open_dashboard').title,'Fitlog');
  assert.deepEqual(tools.tools.find(t=>t.name==='open_dashboard')._meta['openai/ui'].entrypoints,[{type:'global'},{type:'thread'}]);
- const resource=await client.readResource({uri:'ui://fitlog/dashboard/v0.1.4.html'});assert.deepEqual(resource.contents[0]._meta['openai/ui'].availableDisplayModes,['inline','pip','fullscreen']);assert.equal(resource.contents[0].mimeType,'text/html;profile=mcp-app');assert.ok(resource.contents[0].text.includes('<div id="root"></div><script>'), 'UI resource must contain an executable app root');
+ const resource=await client.readResource({uri:'ui://fitlog/dashboard/v0.1.5.html'});assert.deepEqual(resource.contents[0]._meta['openai/ui'].availableDisplayModes,['inline','pip','fullscreen']);assert.equal(resource.contents[0].mimeType,'text/html;profile=mcp-app');assert.ok(resource.contents[0].text.includes('<div id="root"></div><script>'), 'UI resource must contain an executable app root');
  const args={activity:{type:'meal',localDate:'2020-01-02',title:'합성 점심',mealType:'lunch'},idempotencyKey:'mcp-test-key-001'};
  const created=await call('create_activity',args);assert.equal(created.isError,undefined);const a=created.structuredContent.data.activity;
  assert.equal((await call('create_activity',args)).structuredContent.data.activity.id,a.id);
